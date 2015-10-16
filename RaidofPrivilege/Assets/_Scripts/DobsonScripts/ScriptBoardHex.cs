@@ -32,11 +32,39 @@ public class ScriptBoardHex : MonoBehaviour
     public int hexDieValue;
     public HexType resource;
 
+    public Sprite[] resourceSprites;
 
     void Start()
     {
-        CheckAndGenerateCorners();
-        CheckAndGenerateEdges();
+
+        switch (resource)
+        {
+            case HexType.WOOD:
+                gameObject.GetComponent<SpriteRenderer>().sprite =
+                    resourceSprites[(int)resource];
+                break;
+            case HexType.BRICK:
+                gameObject.GetComponent<SpriteRenderer>().sprite =
+                    resourceSprites[(int)resource];
+                break;
+            case HexType.GRAIN:
+                gameObject.GetComponent<SpriteRenderer>().sprite =
+                    resourceSprites[(int)resource];
+                break;
+            case HexType.WOOL:
+                gameObject.GetComponent<SpriteRenderer>().sprite =
+                    resourceSprites[(int)resource];
+                break;
+            case HexType.NONE:
+                gameObject.GetComponent<SpriteRenderer>().sprite =
+                    resourceSprites[(int)resource];
+                break;
+        }
+
+        
+
+        //CheckAndGenerateCorners(); //disabled this so it doesn't try to generate anything.
+        //CheckAndGenerateEdges();
         //ScriptSaveLoad saveScript = GameObject.Find("GameEngine").GetComponent<ScriptSaveLoad>();
         //saveScript.hexes.Add(this);
     }
