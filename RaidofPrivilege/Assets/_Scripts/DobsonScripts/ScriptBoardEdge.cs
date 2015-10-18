@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class ScriptBoardEdge : MonoBehaviour {
 
     public ScriptEngine engine;
-    public ScriptPlayer owner = null;
+    public PlayerData owner = null;
     public List<ScriptBoardEdge> adjacentRoads = new List<ScriptBoardEdge>(0);
     public List<ScriptBoardCorner> adjacentSettlements = new List<ScriptBoardCorner>(0);
 

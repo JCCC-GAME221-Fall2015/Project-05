@@ -19,12 +19,36 @@ public class PlayerData : MonoBehaviour {
     public Text brickAmount;
     public Text woodAmount;
     public Text woolAmount;
-    
+
+    public string PlayerName;
+
+    public List<GameObject> settlements;
+    public List<GameObject> roads;
+
+    public bool EndTurn = false;
+
+
+    public int NumSettlements
+    {
+        get;
+        set;
+    }
 
     [HideInInspector]
     public List<string> playerActions;
 
+    public PlayerData(string pName)
+    {
 
+    }
+
+    public void GainResources(int diceRoll)
+    {
+        foreach (GameObject settlement in settlements)
+        {
+            settlement.GetComponent<ScriptBoardCorner>().GainResources(diceRoll);
+        }
+    }
 
     /// <summary>
     /// Adds a string to the player Actions list for saving later
@@ -62,6 +86,26 @@ public class PlayerData : MonoBehaviour {
     #endif
         UpdateResourceText();
 
+    }
+
+    public void ChangeGrain(int pAmount)
+    {
+        grain += pAmount;
+    }
+
+    public void ChangeBrick(int pAmount)
+    {
+        brick += pAmount;
+    }
+
+    public void ChangeWood(int pAmount)
+    {
+        wood += pAmount;
+    }
+
+    public void ChangeWool(int pAmount)
+    {
+        wool += pAmount;
     }
 
     void UpdateResourceText()

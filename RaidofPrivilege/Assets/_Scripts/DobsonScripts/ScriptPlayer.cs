@@ -12,7 +12,8 @@ public class ScriptPlayer {
     public List<GameObject> roads;
 
     public bool EndTurn = false;
-    
+   
+
     public void GainResources(int diceRoll)
     {
         foreach(GameObject settlement in settlements)

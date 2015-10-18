@@ -36,7 +36,7 @@ public enum StateCommands
 public class ScriptEngine : MonoBehaviour
 {
 
-    public List<ScriptPlayer> players = new List<ScriptPlayer>();
+    public List<PlayerData> players = new List<PlayerData>();
 
     //ScriptPlayer player = new ScriptPlayer("Mike");
     Dictionary<ScriptPhaseTransition, GameState> allTransitions; //a dictionary of phase transitions
@@ -64,24 +64,30 @@ public class ScriptEngine : MonoBehaviour
     #endregion
 
     #region Phase 2 variables
+    [Header("Phase 2")]
     public GameObject phase2menu; // the phase 2 menu
+    public GameObject tradeWindow;
     #endregion
 
     #region Phase 3 variables
+    [Header("Phase 3")]
     public GameObject phase3menu; // the phase 3 menu
     public GameObject BuildSettlementMenu; //build settlement button
     public GameObject BuildRoadMenu; //build road button
     #endregion
 
     #region Phase 4 variables
+    [Header("Phase 4")]
     public GameObject phase4menu; // the phase 4 menu
     #endregion
 
     #region Phase 5 variables
+    [Header("Phase 5")]
     public GameObject phase5menu; // the phase 5 menu
     #endregion
 
     #region Phase 6 variables
+    [Header("Phase 6")]
     public GameObject phase6menu; // the phase 6 menu
     public Text WinnerText; // winner text for phase 6
     int winningPlayerNumber = -1;
@@ -91,7 +97,7 @@ public class ScriptEngine : MonoBehaviour
     void Start()
     {
 
-        players.Add(new ScriptPlayer("Mike"));
+        players.Add(new PlayerData("Mike"));
         //setup the current state
         CurrentState = GameState.PHASE0;
 
@@ -273,40 +279,41 @@ public class ScriptEngine : MonoBehaviour
 
     }
 
-    void Transition()
+    public void Transition()
     {
         switch (PreviousState)
         {
             case GameState.PHASE0:
-                phase0menu.SetActive(false);
-                phase1menu.SetActive(true);
+                //phase0menu.SetActive(false); //Andrew Seba
+                //phase1menu.SetActive(true);
                 Phase5();
                 break;
             case GameState.PHASE1:
-                phase1menu.SetActive(false);
-                phase2menu.SetActive(true);
+                //phase1menu.SetActive(false);
+                //phase2menu.SetActive(true);
+                tradeWindow.SetActive(true);
                 Phase2();
                 break;
             case GameState.PHASE2:
-                phase2menu.SetActive(false);
-                phase3menu.SetActive(true);
+                //phase2menu.SetActive(false);
+                //phase3menu.SetActive(true);
                 Phase3();
                 break;
             case GameState.PHASE3:
-                phase3menu.SetActive(false);
+                //phase3menu.SetActive(false);
                 BuildRoadMenu.SetActive(false);
                 BuildSettlementMenu.SetActive(false);
-                phase4menu.SetActive(true);
+                //phase4menu.SetActive(true);
                 Phase4();
                 break;
             case GameState.PHASE4:
-                phase4menu.SetActive(false);
+                //phase4menu.SetActive(false);
                 Phase5();
                 break;
             case GameState.PHASE5:
                 if (CurrentState == GameState.PHASE1)
                 {
-                    phase1menu.SetActive(true);
+                    //phase1menu.SetActive(true);
                     Phase1();
                 }
                 else
@@ -326,7 +333,7 @@ public class ScriptEngine : MonoBehaviour
         //ResourcesText();
         StartCoroutine("StartGame");
 
-        //MoveNextAndTransition("goto phase 5");
+        MoveNextAndTransition("goto phase 5");
     }
 
     IEnumerator StartGame()
@@ -431,7 +438,7 @@ public class ScriptEngine : MonoBehaviour
 
     void DisplaySettlementButton()
     {
-        if (players[0].NumBrick >= 1 && players[0].NumLumber >= 1 && players[0].NumWheat >= 1 && players[0].NumWool >= 1)
+        if (players[0].brick >= 1 && players[0].wood >= 1 && players[0].grain >= 1 && players[0].wool >= 1)
         {
             BuildSettlementMenu.SetActive(true);
         }
@@ -452,10 +459,10 @@ public class ScriptEngine : MonoBehaviour
                         if (hit.transform.GetComponent<ScriptBoardCorner>().CheckValidBuild())
                         {
                             Debug.Log("Valid Settlement Placement");
-                            players[0].RemoveBricks(1);
-                            players[0].RemoveLumber(1);
-                            players[0].RemoveWheat(1);
-                            players[0].RemoveWool(1);
+                            players[0].ChangeBrick(-1);
+                            players[0].ChangeWood(-1);
+                            players[0].ChangeGrain(-1);
+                            players[0].ChangeWool(-1);
                             BuildSettlementMenu.SetActive(false);
                             BuildRoadMenu.SetActive(false);
                             //ResourcesText();
@@ -477,7 +484,7 @@ public class ScriptEngine : MonoBehaviour
 
     void DisplayRoadButton()
     {
-        if (players[0].NumBrick >= 1 && players[0].NumLumber >= 1)
+        if (players[0].brick >= 1 && players[0].wood >= 1)
         {
             BuildRoadMenu.SetActive(true);
         }
@@ -498,8 +505,8 @@ public class ScriptEngine : MonoBehaviour
                         if (hit.transform.GetComponent<ScriptBoardEdge>().CheckValidBuild())
                         {
                             Debug.Log("Valid Road Placement");
-                            players[0].RemoveBricks(1);
-                            players[0].RemoveLumber(1);
+                            players[0].ChangeBrick(-1);
+                            players[0].ChangeWood(-1);
                             BuildSettlementMenu.SetActive(false);
                             BuildRoadMenu.SetActive(false);
                             //ResourcesText();
@@ -519,10 +526,10 @@ public class ScriptEngine : MonoBehaviour
         }
     }
 
-    public void NextPhase()
-    {
-        MoveNextAndTransition("goto phase 4");
-    }
+    //public void NextPhase()
+    //{
+    //    MoveNextAndTransition("goto phase 4");
+    //}
 
     #endregion
 
@@ -543,7 +550,7 @@ public class ScriptEngine : MonoBehaviour
         while (true)
         {
             endTurn = true;
-            foreach (ScriptPlayer player in players)
+            foreach (PlayerData player in players)
             {
                 if (endTurn == true && player.EndTurn == false)
                 {
@@ -642,6 +649,7 @@ public class ScriptEngine : MonoBehaviour
         Application.Quit();
     }
     #endregion
+
 }
 
 
@@ -698,7 +706,7 @@ public class ScriptEngine : MonoBehaviour
 //    public GameObject BuildSettlementMenu; //build settlement button
 //    public GameObject BuildRoadMenu; //build road button
 //=======
-   
+
 //    public List<ScriptPlayer> players = new List<ScriptPlayer>();
 
 //    //ScriptPlayer player = new ScriptPlayer("Mike");
@@ -782,7 +790,7 @@ public class ScriptEngine : MonoBehaviour
 //        Debug.Log("Current state: " + CurrentState);
 //        Phase0();
 //    }
-	
+
 //    GameState GetNext(StateCommands command)
 //<<<<<<< HEAD
 //    {
@@ -887,7 +895,7 @@ public class ScriptEngine : MonoBehaviour
 //    void Phase3()
 //    {
 //        Debug.Log("Entering Phase 3");
-		
+
 //        if(player.NumBrick > 1 && player.NumLumber > 1 && player.NumWheat > 1 && player.NumWool > 1)
 //        {
 //            BuildSettlementMenu.SetActive(true);
@@ -1023,7 +1031,7 @@ public class ScriptEngine : MonoBehaviour
 //        StartCoroutine("GetRoad");
 
 //        phase0button.SetActive(true);
-        
+
 //        //MoveNextAndTransition("goto phase 5");
 //    }
 
@@ -1187,10 +1195,7 @@ public class ScriptEngine : MonoBehaviour
 //        }
 //    }
 
-//    public void NextPhase()
-//    {
-//        MoveNextAndTransition("goto phase 4");
-//    }
+
 
 //    #endregion
 
@@ -1235,7 +1240,7 @@ public class ScriptEngine : MonoBehaviour
 //            yield break;  
 //        }
 //        yield return null;
-        
+
 //    }
 
 //    public void ReturnToTrade()

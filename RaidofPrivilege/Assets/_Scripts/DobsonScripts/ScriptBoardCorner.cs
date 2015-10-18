@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class ScriptBoardCorner : MonoBehaviour {
 
     public ScriptEngine engine;
-    public ScriptPlayer owner = null;
+    public PlayerData owner = null;
     public bool roadUp;
     public List<ScriptBoardHex> adjacentHexes = new List<ScriptBoardHex>(0);
     public List<ScriptBoardEdge> adjacentRoads = new List<ScriptBoardEdge>(0);
@@ -37,16 +37,16 @@ public class ScriptBoardCorner : MonoBehaviour {
                 switch(hex.resource)
                 {
                     case HexType.BRICK:
-                        owner.AddBricks(1);
+                        owner.ChangeBrick(1);
                         break;
                     case HexType.GRAIN:
-                        owner.AddWheat(1);
+                        owner.ChangeGrain(1);
                         break;
                     case HexType.WOOD:
-                        owner.AddLumber(1);
+                        owner.ChangeWood(1);
                         break;
                     case HexType.WOOL:
-                        owner.AddWool(1);
+                        owner.ChangeWool(1);
                         break;
                 }
             }
