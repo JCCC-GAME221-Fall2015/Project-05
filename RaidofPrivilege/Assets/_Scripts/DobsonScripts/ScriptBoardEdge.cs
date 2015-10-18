@@ -11,7 +11,7 @@ public class ScriptBoardEdge : MonoBehaviour {
 
     void Start()
     {
-        engine = GameObject.Find("GameEngine").GetComponent<ScriptEngine>();
+        engine = GameObject.Find("Player").GetComponent<ScriptEngine>();
     }
 
     public bool CheckValidBuild()

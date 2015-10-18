@@ -12,4 +12,9 @@ public class ScriptItemRemaining : MonoBehaviour {
     public int resourceAmount;
     public Button.ButtonClickedEvent thingToDo;
 
+    public ScriptItemRemaining(string pName, int pResourceAmount)
+    {
+        resourceName = pName;
+        resourceAmount = pResourceAmount;
+    }
 }

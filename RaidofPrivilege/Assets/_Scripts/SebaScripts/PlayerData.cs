@@ -10,7 +10,7 @@ public class PlayerData : MonoBehaviour {
 
     [HideInInspector]
     public Phases curPhase;
-    public int wood { get; set; }
+    public int wood; //{ get; set; }
     public int wool { get; set; }
     public int brick { get; set; }
     public int grain {get; set; }
