@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class PlayerData : MonoBehaviour {
 
     [HideInInspector]
-    public Phases curPhase;
+    public GameState curPhase;
     public int wood { get; set; }
     public int wool { get; set; }
     public int brick { get; set; }
@@ -19,12 +19,53 @@ public class PlayerData : MonoBehaviour {
     public Text brickAmount;
     public Text woodAmount;
     public Text woolAmount;
-    
+
+    public string PlayerName;
+
+    public List<GameObject> settlements;
+    public List<GameObject> roads;
+
+    public bool EndTurn = false;
+
+
+    public int numSettlements { get; set; }
 
     [HideInInspector]
     public List<string> playerActions;
 
+    
 
+    //public PlayerData(string pName)
+    //{
+        
+    //}
+
+    void Start()
+    {
+        wood = 0;
+        wool = 0;
+        brick = 0;
+        grain = 0;
+        numSettlements = 0;
+
+        settlements = new List<GameObject>();
+        roads = new List<GameObject>();
+
+        transform.parent = GameObject.Find("Player").transform;
+
+        grainAmount = GameObject.Find("Text_GrainAmount").GetComponent<Text>();
+        brickAmount = GameObject.Find("Text_BrickAmount").GetComponent<Text>();
+        woodAmount = GameObject.Find("Text_WoodAmount").GetComponent<Text>();
+        woolAmount = GameObject.Find("Text_WoolAmount").GetComponent<Text>();
+    }
+
+    public void GainResources(int diceRoll)
+    {
+        foreach (GameObject settlement in settlements)
+        {
+            settlement.GetComponent<ScriptBoardCorner>().GainResources(diceRoll);
+        }
+    }
 
     /// <summary>
     /// Adds a string to the player Actions list for saving later
@@ -64,8 +105,29 @@ public class PlayerData : MonoBehaviour {
 
     }
 
+    public void ChangeGrain(int pAmount)
+    {
+        grain += pAmount;
+    }
+
+    public void ChangeBrick(int pAmount)
+    {
+        brick += pAmount;
+    }
+
+    public void ChangeWood(int pAmount)
+    {
+        wood += pAmount;
+    }
+
+    public void ChangeWool(int pAmount)
+    {
+        wool += pAmount;
+    }
+
     void UpdateResourceText()
     {
+        
         grainAmount.text = grain.ToString();
         brickAmount.text = brick.ToString();
         woodAmount.text = wood.ToString();
