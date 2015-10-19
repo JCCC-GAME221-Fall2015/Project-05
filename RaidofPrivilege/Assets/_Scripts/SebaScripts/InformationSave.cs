@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections; // Craig
 using System.IO;
 using System.Collections.Generic;
 
@@ -84,10 +85,7 @@ public class InformationSave : MonoBehaviour {
 
 	}
 
-
-
-
-    /*SaveFile Looks like
+	/*SaveFile Looks like
     UserName
     LevelName
     CurrentPhase
@@ -101,23 +99,23 @@ public class InformationSave : MonoBehaviour {
 	public void SaveGame()
 	{
 		PlayerData playerData = GameObject.Find("SceneManager").GetComponent<PlayerData>();
-
+		
 		StreamWriter writer = null;
 		using (writer = new StreamWriter(txtInfoLocation + outputFile))
 		{
 			writer.WriteLine(userName);
 			writer.WriteLine(levelName);
-
+			
 			writer.WriteLine(playerData.curPhase);
-
+			
 			writer.WriteLine(playerData.wood);
 			writer.WriteLine(playerData.wool);
 			writer.WriteLine(playerData.brick);
 			writer.WriteLine(playerData.grain);
-
-
-            //Write building info.TODO
-
+			
+			
+			//Write building info.TODO
+			
 			//write actions
 			foreach(string action in playerData.playerActions)
 			{
@@ -127,16 +125,17 @@ public class InformationSave : MonoBehaviour {
 		writer.Close();
     }
 
- 	/* New SaveFile Looks like
-+	Starts with a Player line:
-+		PN=Craig#LN=CraigsGame#CP=GAMESTART#WD=0#WL=0#BR=0#GR=0#
-+	That's followed by one line for every Hex in the map:
-+		HN=Hex (4)#HP=(0.0, -1.0, 0.0)#DN=0#RT=3#
-+	Those are followed by Road lines in the map (probably owned by the Player):
-+		RN=Road#RP=(0.4, -1.2, 0.0)#RO=None#
-+	Those are followed by Settlement lines in the map (probably owned by the Player):
-+		SN=Settlement#SP=(-0.5, -0.3, 0.0)#SR=(0.7, 0.0, 0.0, 0.7)#SO=None#
-+    */
+	/* New SaveFile Looks like
+	Starts with a Player line:
+		PN=Craig#LN=CraigsGame#CP=GAMESTART#WD=0#WL=0#BR=0#GR=0#
+	That's followed by one line for every Hex in the map:
+		HN=Hex (4)#HP=(0.0, -1.0, 0.0)#DN=0#RT=3#
+	Those are followed by Road lines in the map (probably owned by the Player):
+		RN=Road#RP=(0.4, -1.2, 0.0)#RO=None#
+	Those are followed by Settlement lines in the map (probably owned by the Player):
+		SN=Settlement#SP=(-0.5, -0.3, 0.0)#SR=(0.7, 0.0, 0.0, 0.7)#SO=None#
+    */
+
 	public void SaveGame2() // Craig
 	{
 		string outputString;
@@ -158,7 +157,8 @@ public class InformationSave : MonoBehaviour {
 			writer.WriteLine(outputString);
 
 			hexes = GameObject.FindGameObjectsWithTag("Hex");
-			for (int i = 0; i<hexes.Length; i++)
+
+			for (int i = 0; i < hexes.Length; i++)
 			{
 				outputString = "HN=" + hexes[i].name.ToString() +
 					"#HP=" + hexes[i].transform.position.ToString() +
@@ -169,7 +169,8 @@ public class InformationSave : MonoBehaviour {
 			}
 			
 			roads = GameObject.FindGameObjectsWithTag("Road");
-			for (int i = 0; i<roads.Length; i++)
+
+			for (int i = 0; i < roads.Length; i++)
 			{
 				if (roads[i].GetComponent<ScriptBoardEdge>().owner == null)
 				{
@@ -188,7 +189,8 @@ public class InformationSave : MonoBehaviour {
 			}
 			
 			settlements = GameObject.FindGameObjectsWithTag("Settlement");
-			for (int i = 0; i<settlements.Length; i++)
+
+			for (int i = 0; i < settlements.Length; i++)
 			{
 				if (settlements[i].GetComponent<ScriptBoardCorner>().owner == null)
 				{

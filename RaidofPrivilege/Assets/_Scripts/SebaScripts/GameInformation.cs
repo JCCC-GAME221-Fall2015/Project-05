@@ -29,7 +29,9 @@ public class GameInformation : MonoBehaviour {
 	/// </summary>
 	public void _SaveGame()
 	{
-		saveInfo.SaveGame2();
+		saveInfo.SaveGame2(); // Craig
+//		saveInfo.SaveGame();
+
 	}
 
 
@@ -74,7 +76,7 @@ public class GameInformation : MonoBehaviour {
         {
             if(panelOptions != null)
             {
-                panelOptions.gameObject.SetActive(false);
+//                panelOptions.gameObject.SetActive(false); // Craig
             }
         }
     }
