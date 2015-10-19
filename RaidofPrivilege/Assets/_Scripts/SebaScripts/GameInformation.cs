@@ -29,7 +29,7 @@ public class GameInformation : MonoBehaviour {
 	/// </summary>
 	public void _SaveGame()
 	{
-		saveInfo.SaveGame();
+		saveInfo.SaveGame2();
 	}
 
 
