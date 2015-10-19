@@ -15,6 +15,10 @@ public class ScriptTradeWindow : MonoBehaviour {
 
     PlayerData playerData;
 
+    /// <summary>
+    /// Adds the game resources to a list of resources that we might display
+    /// on the trade window.
+    /// </summary>
     public void InitList()
     {
         playerData = GameObject.FindGameObjectWithTag("Player").
@@ -62,6 +66,9 @@ public class ScriptTradeWindow : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Button Function.
+    /// </summary>
     public void SomethingToDo()
     {
         PopulateRemainingList();

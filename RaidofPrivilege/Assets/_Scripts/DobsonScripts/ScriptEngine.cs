@@ -12,13 +12,13 @@ using UnityEngine.UI;
 
 public enum GameState
 {
-    PHASE0,
-    PHASE1,
-    PHASE2,
-    PHASE3,
-    PHASE4,
-    PHASE5,
-    PHASE6
+    PHASE0,//GameStart
+    PHASE1,//Roll
+    PHASE2,//Trade
+    PHASE3,//Build
+    PHASE4,//Process
+    PHASE5,//EndGame
+    PHASE6//Win
 }
 
 public enum StateCommands
@@ -94,9 +94,28 @@ public class ScriptEngine : MonoBehaviour
     int winningPlayerNumber = -1;
     #endregion
 
+    /// <summary>
+    /// Visual FeedBack stuff.
+    /// </summary>
+    List<GameObject> allEmptySettlements;
+    List<GameObject> allEmptyRoads;
+
     // Use this for initialization
     void Start()
     {
+        allEmptySettlements = new List<GameObject>();
+        allEmptyRoads = new List<GameObject>();
+        //Grab all settlements
+        foreach(GameObject settlement in GameObject.FindGameObjectsWithTag("Settlement"))
+        {
+            allEmptySettlements.Add(settlement);
+        }
+        foreach(GameObject road in GameObject.FindGameObjectsWithTag("Road"))
+        {
+            allEmptyRoads.Add(road);
+        }
+
+
         GameObject player1 = new GameObject();
         player1.AddComponent<PlayerData>();
         player1.GetComponent<PlayerData>().PlayerName = "Mike";
@@ -280,8 +299,7 @@ public class ScriptEngine : MonoBehaviour
         Debug.Log("Transitioning from " + PreviousState + " -> " + CurrentState);
         //transition the game to the next state
 
-        //Andrew Seba(Commented Out
-        //Transition();
+        Transition();
 
     }
 
@@ -337,11 +355,7 @@ public class ScriptEngine : MonoBehaviour
     void Phase0()
     {
         Debug.Log("Entering Phase 0");
-        //PhaseTextTransition();
-        //ResourcesText();
         StartCoroutine("StartGame");
-
-        MoveNextAndTransition("goto phase 5");
     }
 
     IEnumerator StartGame()
@@ -352,21 +366,30 @@ public class ScriptEngine : MonoBehaviour
         //phase0button.SetActive(true);
     }
 
+
     IEnumerator GetSettlement()
     {
         while (true)
         {
-            if (Input.GetMouseButtonDown(0))
+            foreach(GameObject settlement in allEmptySettlements)
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit))
+                settlement.GetComponent<Renderer>().material.color = Color.clear;
+            }
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.transform.tag == "Settlement")
                 {
-                    if (hit.transform.tag == "Settlement")
+                    hit.collider.gameObject.GetComponent<Renderer>().material.color = Color.yellow;
+
+                    if (Input.GetMouseButtonDown(0))
                     {
-                        
                         hit.transform.GetComponent<ScriptBoardCorner>().owner = players[0];
                         players[0].settlements.Add(hit.transform.gameObject);//Andrew Seba
+                        allEmptySettlements.Remove(hit.collider.gameObject);
                         break;
                     }
                 }
@@ -379,17 +402,26 @@ public class ScriptEngine : MonoBehaviour
     {
         while (true)
         {
-            if (Input.GetMouseButtonDown(0))
+            foreach(GameObject road in allEmptyRoads)
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit))
+                road.GetComponent<Renderer>().material.color = Color.clear;
+            }
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.transform.tag == "Road")
                 {
-                    if (hit.transform.tag == "Road")
+                    hit.collider.gameObject.GetComponent<Renderer>().material.color = Color.yellow;
+                    if (Input.GetMouseButtonDown(0))
                     {
                         if (hit.transform.GetComponent<ScriptBoardEdge>().CheckStartRoad())
                         {
+                            hit.transform.GetComponent<ScriptBoardEdge>().owner = players[0];
                             players[0].roads.Add(hit.transform.gameObject);//Andrew Seba
+                            allEmptyRoads.Remove(hit.collider.gameObject);
+
                             break;
                         }
                     }
@@ -410,32 +442,21 @@ public class ScriptEngine : MonoBehaviour
         Debug.Log("Dice Roll " + diceRoll);
         Debug.Log("Checking Settlements");
         players[0].GainResources(diceRoll);
-
-        Debug.Log("brick: " +players[0].brick +
-            "\nwood: " + players[0].wood +
-            "\nwool: " + players[0].wool +
-            "\ngrain: " + players[0].grain);
-
-        MoveNextAndTransition("goto phase 2");
     }
     #endregion
 
     #region Phase 2
     void Phase2()
     {
-        Debug.Log("Entering Phase 2");
-        //PhaseTextTransition();
-        //ResourcesText();
-        MoveNextAndTransition("goto phase 3");
+        Debug.Log("Entered Phase 2");
     }
     #endregion
 
     #region Phase 3
     void Phase3()
     {
-        Debug.Log("Entering Phase 3");
-        //PhaseTextTransition();
-        //ResourcesText();
+        Debug.Log("Entered Phase 3");
+        BuildPhaseMenu.SetActive(true);
         DisplayRoadButton();
         DisplaySettlementButton();
     }
@@ -469,15 +490,24 @@ public class ScriptEngine : MonoBehaviour
     {
         while (true)
         {
-            if (Input.GetMouseButtonDown(0))
+
+            //Andrew Seba
+            foreach (GameObject settlement in allEmptySettlements)
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit))
+                settlement.GetComponent<Renderer>().material.color = Color.clear;
+            }
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.transform.tag == "Settlement")
                 {
-                    if (hit.transform.tag == "Settlement")
+
+                    hit.collider.gameObject.GetComponent<Renderer>().material.color = Color.yellow;
+
+                    if (Input.GetMouseButtonDown(0))
                     {
-                        
                         if (hit.transform.GetComponent<ScriptBoardCorner>().CheckValidBuild())
                         {
                             Debug.Log("Valid Settlement Placement");
@@ -485,23 +515,29 @@ public class ScriptEngine : MonoBehaviour
                             players[0].ChangeWood(-1);
                             players[0].ChangeGrain(-1);
                             players[0].ChangeWool(-1);
-                            //BuildSettlementButton.SetActive(false); //Andrew Seba
-                            //BuildRoadButton.SetActive(false);
-                            //ResourcesText();
+
                             DisplayRoadButton();
                             DisplaySettlementButton();
+
+                            //Add to player and remove from empty list //andrew seba
+                            hit.transform.GetComponent<ScriptBoardCorner>().owner = players[0];
+                            players[0].settlements.Add(hit.transform.gameObject);//Andrew Seba
+                            allEmptySettlements.Remove(hit.collider.gameObject);
+
                             break;
                         }
                         else
                         {
                             Debug.Log("Invalid Settlement Placement");
-                            break;
+                            //break;
                         }
                     }
                 }
             }
             yield return null;
         }
+            
+        
     }
 
     void DisplayRoadButton()
@@ -520,36 +556,50 @@ public class ScriptEngine : MonoBehaviour
     {
         while (true)
         {
-            if (Input.GetMouseButtonDown(0))
+
+            foreach (GameObject road in allEmptyRoads)
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit))
+                road.GetComponent<Renderer>().material.color = Color.clear;
+            }
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.transform.tag == "Road")
                 {
-                    if (hit.transform.tag == "Road")
+                    GameObject selectedRoad = hit.collider.gameObject;
+                    selectedRoad.GetComponent<Renderer>().material.color = Color.yellow;
+
+                    if (Input.GetMouseButtonDown(0))
                     {
-                        if (hit.transform.GetComponent<ScriptBoardEdge>().CheckValidBuild())
+                        if (selectedRoad.GetComponent<ScriptBoardEdge>().CheckValidBuild())
                         {
                             Debug.Log("Valid Road Placement");
                             players[0].ChangeBrick(-1);
                             players[0].ChangeWood(-1);
-                            //BuildSettlementButton.SetActive(false);
-                            //BuildRoadButton.SetActive(false);
-                            //ResourcesText();
                             DisplayRoadButton();
                             DisplaySettlementButton();
+
+                            //Andrew Seba
+                            selectedRoad.GetComponent<ScriptBoardEdge>().owner = players[0];
+                            players[0].roads.Add(hit.transform.gameObject);
+                            allEmptyRoads.Remove(selectedRoad);
+                            //end Andrew Seba
                             break;
                         }
                         else
                         {
                             Debug.Log("Invalid Road Placement");
-                            break;
+                            //break;
                         }
                     }
                 }
             }
             yield return null;
         }
+
+
     }
 
     //public void NextPhase()
@@ -559,6 +609,10 @@ public class ScriptEngine : MonoBehaviour
 
     #endregion
 
+
+
+        //Split phase 4
+        //something something
     #region Phase 4
     void Phase4()
     {
@@ -570,6 +624,7 @@ public class ScriptEngine : MonoBehaviour
 
     }
 
+    //Split this to the game manager
     IEnumerator CheckForEndTurn()
     {
         bool endTurn;
@@ -676,7 +731,36 @@ public class ScriptEngine : MonoBehaviour
     }
     #endregion
 
+    /// <summary>
+    /// @Author: Andrew Seba
+    /// @Description: Takes the current phase and calls the transition engine.
+    /// Button should only be available if done with phase.
+    /// </summary>
+    public void _NextPhaseButton()
+    {
+        switch (CurrentState)
+        {
+            case GameState.PHASE0:
+                MoveNextAndTransition("goto phase 5");
+                break;
+            case GameState.PHASE1:
+                MoveNextAndTransition("goto phase 2");
+                break;
+            case GameState.PHASE2:
+                MoveNextAndTransition("goto phase 3");
+                break;
+            case GameState.PHASE3:
+                MoveNextAndTransition("goto phase 4");
+                break;
+            case GameState.PHASE4:
+                break;
+            case GameState.PHASE5:
+                break;
+
+        }
+    }
 }
+
 
 
 //using UnityEngine;
