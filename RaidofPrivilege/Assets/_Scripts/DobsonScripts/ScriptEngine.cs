@@ -66,14 +66,15 @@ public class ScriptEngine : MonoBehaviour
     #region Phase 2 variables
     [Header("Phase 2")]
     public GameObject phase2menu; // the phase 2 menu
-    public GameObject tradeWindow;
+    public GameObject tradeWindowButton;
     #endregion
 
     #region Phase 3 variables
     [Header("Phase 3")]
     public GameObject phase3menu; // the phase 3 menu
-    public GameObject BuildSettlementMenu; //build settlement button
-    public GameObject BuildRoadMenu; //build road button
+    public GameObject BuildPhaseMenu; //Andrew Seba
+    public GameObject BuildSettlementButton; //build settlement button
+    public GameObject BuildRoadButton; //build road button
     #endregion
 
     #region Phase 4 variables
@@ -96,8 +97,10 @@ public class ScriptEngine : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
-        players.Add(new PlayerData("Mike"));
+        GameObject player1 = new GameObject();
+        player1.AddComponent<PlayerData>();
+        player1.GetComponent<PlayerData>().PlayerName = "Mike";
+        players.Add(player1.GetComponent<PlayerData>());
         //setup the current state
         CurrentState = GameState.PHASE0;
 
@@ -137,6 +140,7 @@ public class ScriptEngine : MonoBehaviour
         Debug.Log("Current state: " + CurrentState);
         Phase0();
     }
+
 
     #region Common Class Methods
 
@@ -275,7 +279,9 @@ public class ScriptEngine : MonoBehaviour
 
         Debug.Log("Transitioning from " + PreviousState + " -> " + CurrentState);
         //transition the game to the next state
-        Transition();
+
+        //Andrew Seba(Commented Out
+        //Transition();
 
     }
 
@@ -291,18 +297,18 @@ public class ScriptEngine : MonoBehaviour
             case GameState.PHASE1:
                 //phase1menu.SetActive(false);
                 //phase2menu.SetActive(true);
-                tradeWindow.SetActive(true);
+                tradeWindowButton.SetActive(true);
                 Phase2();
                 break;
             case GameState.PHASE2:
                 //phase2menu.SetActive(false);
                 //phase3menu.SetActive(true);
+                tradeWindowButton.SetActive(false);
                 Phase3();
                 break;
             case GameState.PHASE3:
                 //phase3menu.SetActive(false);
-                BuildRoadMenu.SetActive(false);
-                BuildSettlementMenu.SetActive(false);
+                BuildPhaseMenu.SetActive(true);
                 //phase4menu.SetActive(true);
                 Phase4();
                 break;
@@ -341,7 +347,7 @@ public class ScriptEngine : MonoBehaviour
         yield return StartCoroutine("GetSettlement");
         yield return StartCoroutine("GetRoad");
 
-        phase0button.SetActive(true);
+        //phase0button.SetActive(true);
     }
 
     IEnumerator GetSettlement()
@@ -356,7 +362,9 @@ public class ScriptEngine : MonoBehaviour
                 {
                     if (hit.transform.tag == "Settlement")
                     {
+                        
                         hit.transform.GetComponent<ScriptBoardCorner>().owner = players[0];
+                        players[0].settlements.Add(hit.transform.gameObject);//Andrew Seba
                         break;
                     }
                 }
@@ -379,6 +387,7 @@ public class ScriptEngine : MonoBehaviour
                     {
                         if (hit.transform.GetComponent<ScriptBoardEdge>().CheckStartRoad())
                         {
+                            players[0].roads.Add(hit.transform.gameObject);//Andrew Seba
                             break;
                         }
                     }
@@ -399,7 +408,13 @@ public class ScriptEngine : MonoBehaviour
         Debug.Log("Dice Roll " + diceRoll);
         Debug.Log("Checking Settlements");
         players[0].GainResources(diceRoll);
-        //MoveNextAndTransition("goto phase 2");
+
+        Debug.Log("brick: " +players[0].brick +
+            "\nwood: " + players[0].wood +
+            "\nwool: " + players[0].wool +
+            "\ngrain: " + players[0].grain);
+
+        MoveNextAndTransition("goto phase 2");
     }
     #endregion
 
@@ -409,7 +424,7 @@ public class ScriptEngine : MonoBehaviour
         Debug.Log("Entering Phase 2");
         //PhaseTextTransition();
         //ResourcesText();
-        //MoveNextAndTransition("goto phase 3");
+        MoveNextAndTransition("goto phase 3");
     }
     #endregion
 
@@ -440,7 +455,11 @@ public class ScriptEngine : MonoBehaviour
     {
         if (players[0].brick >= 1 && players[0].wood >= 1 && players[0].grain >= 1 && players[0].wool >= 1)
         {
-            BuildSettlementMenu.SetActive(true);
+            BuildSettlementButton.GetComponent<Button>().interactable = true;
+        }
+        else//andrew Seba
+        {
+            BuildSettlementButton.GetComponent<Button>().interactable = false;
         }
     }
 
@@ -456,6 +475,7 @@ public class ScriptEngine : MonoBehaviour
                 {
                     if (hit.transform.tag == "Settlement")
                     {
+                        
                         if (hit.transform.GetComponent<ScriptBoardCorner>().CheckValidBuild())
                         {
                             Debug.Log("Valid Settlement Placement");
@@ -463,8 +483,8 @@ public class ScriptEngine : MonoBehaviour
                             players[0].ChangeWood(-1);
                             players[0].ChangeGrain(-1);
                             players[0].ChangeWool(-1);
-                            BuildSettlementMenu.SetActive(false);
-                            BuildRoadMenu.SetActive(false);
+                            //BuildSettlementButton.SetActive(false); //Andrew Seba
+                            //BuildRoadButton.SetActive(false);
                             //ResourcesText();
                             DisplayRoadButton();
                             DisplaySettlementButton();
@@ -486,7 +506,11 @@ public class ScriptEngine : MonoBehaviour
     {
         if (players[0].brick >= 1 && players[0].wood >= 1)
         {
-            BuildRoadMenu.SetActive(true);
+            BuildRoadButton.GetComponent<Button>().interactable = true;
+        }
+        else//Andrew Seba
+        {
+            BuildRoadButton.GetComponent<Button>().interactable = false;
         }
     }
 
@@ -507,8 +531,8 @@ public class ScriptEngine : MonoBehaviour
                             Debug.Log("Valid Road Placement");
                             players[0].ChangeBrick(-1);
                             players[0].ChangeWood(-1);
-                            BuildSettlementMenu.SetActive(false);
-                            BuildRoadMenu.SetActive(false);
+                            //BuildSettlementButton.SetActive(false);
+                            //BuildRoadButton.SetActive(false);
                             //ResourcesText();
                             DisplayRoadButton();
                             DisplaySettlementButton();
@@ -615,7 +639,7 @@ public class ScriptEngine : MonoBehaviour
         Debug.Log("Start Processing");
         for (int i = 0; i < players.Count; i++)
         {
-            if (players[i].NumSettlements > 1.25 * players.Count)
+            if (players[i].numSettlements > 1.25 * players.Count)
             {
                 winningPlayerNumber = i;
             }

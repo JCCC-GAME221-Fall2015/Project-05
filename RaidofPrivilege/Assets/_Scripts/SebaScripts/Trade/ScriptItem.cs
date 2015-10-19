@@ -6,13 +6,13 @@ using UnityEngine.UI;
 /// @Description: Is the actual button being instantiated.
 /// </summary>
 [System.Serializable]
-public class ScriptItemRemaining : MonoBehaviour {
+public class ScriptItem {
 
     public string resourceName;
     public int resourceAmount;
     public Button.ButtonClickedEvent thingToDo;
 
-    public ScriptItemRemaining(string pName, int pResourceAmount)
+    public ScriptItem(string pName, int pResourceAmount)
     {
         resourceName = pName;
         resourceAmount = pResourceAmount;

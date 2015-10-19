@@ -9,8 +9,8 @@ using UnityEngine.UI;
 public class PlayerData : MonoBehaviour {
 
     [HideInInspector]
-    public Phases curPhase;
-    public int wood; //{ get; set; }
+    public GameState curPhase;
+    public int wood { get; set; }
     public int wool { get; set; }
     public int brick { get; set; }
     public int grain {get; set; }
@@ -28,18 +28,35 @@ public class PlayerData : MonoBehaviour {
     public bool EndTurn = false;
 
 
-    public int NumSettlements
-    {
-        get;
-        set;
-    }
+    public int numSettlements { get; set; }
 
     [HideInInspector]
     public List<string> playerActions;
 
-    public PlayerData(string pName)
-    {
+    
 
+    //public PlayerData(string pName)
+    //{
+        
+    //}
+
+    void Start()
+    {
+        wood = 0;
+        wool = 0;
+        brick = 0;
+        grain = 0;
+        numSettlements = 0;
+
+        settlements = new List<GameObject>();
+        roads = new List<GameObject>();
+
+        transform.parent = GameObject.Find("Player").transform;
+
+        grainAmount = GameObject.Find("Text_GrainAmount").GetComponent<Text>();
+        brickAmount = GameObject.Find("Text_BrickAmount").GetComponent<Text>();
+        woodAmount = GameObject.Find("Text_WoodAmount").GetComponent<Text>();
+        woolAmount = GameObject.Find("Text_WoolAmount").GetComponent<Text>();
     }
 
     public void GainResources(int diceRoll)
@@ -110,6 +127,7 @@ public class PlayerData : MonoBehaviour {
 
     void UpdateResourceText()
     {
+        
         grainAmount.text = grain.ToString();
         brickAmount.text = brick.ToString();
         woodAmount.text = wood.ToString();

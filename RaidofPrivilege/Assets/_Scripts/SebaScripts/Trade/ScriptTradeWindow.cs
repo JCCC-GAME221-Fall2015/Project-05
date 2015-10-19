@@ -10,25 +10,31 @@ public class ScriptTradeWindow : MonoBehaviour {
     public Transform contentPanel;
 
     public GameObject prefabButtonRemaining;
-    public List<ScriptItemRemaining> remainingResourceItems;
+    public List<ScriptItem> gameResources;
+    public List<ScriptItem> remainingResourseList;
 
     PlayerData playerData;
 
     public void InitList()
     {
-        playerData = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerData>();
+        playerData = GameObject.FindGameObjectWithTag("Player").
+            GetComponent<ScriptEngine>().
+            players[0].
+            GetComponent<PlayerData>();
 
-        ScriptItemRemaining wood = new ScriptItemRemaining("Wood", playerData.wood);
-        remainingResourceItems.Add(wood);
+        ScriptItem wood = new ScriptItem("Wood", playerData.wood);
+        gameResources.Add(wood);
 
-        ScriptItemRemaining wool = new ScriptItemRemaining("Wool", playerData.wool);
-        remainingResourceItems.Add(wool);
+        ScriptItem wool = new ScriptItem("Wool", playerData.wool);
+        gameResources.Add(wool);
 
-        ScriptItemRemaining brick = new ScriptItemRemaining("Brick", playerData.wood);
-        remainingResourceItems.Add(brick);
+        ScriptItem brick = new ScriptItem("Brick", playerData.brick);
+        gameResources.Add(brick);
 
-        ScriptItemRemaining grain = new ScriptItemRemaining("Grain", playerData.grain);
-        remainingResourceItems.Add(grain);
+        ScriptItem grain = new ScriptItem("Grain", playerData.grain);
+        gameResources.Add(grain);
+
+        PopulateRemainingList();
     }
 
 
@@ -38,9 +44,9 @@ public class ScriptTradeWindow : MonoBehaviour {
     /// </summary>
     void PopulateRemainingList()
     {
-        foreach(ScriptItemRemaining resource in remainingResourceItems)
+        foreach(ScriptItem resource in gameResources)
         {
-            if(resource.resourceAmount > 0)
+            if (resource.resourceAmount > 0 && !remainingResourseList.Contains(resource))
             {
                 GameObject newButton = (GameObject)Instantiate(prefabButtonRemaining);
                 SampleButtonRemaining tempButton = newButton.GetComponent<SampleButtonRemaining>();
@@ -48,15 +54,16 @@ public class ScriptTradeWindow : MonoBehaviour {
                 tempButton.resourceName.text = resource.resourceName;
                 tempButton.resourceAmount.text = resource.resourceAmount.ToString();
 
-                //tempButton.button.onClick.AddListener(delegate { SomethingToDo(); });
+                tempButton.button.onClick.AddListener(delegate { SomethingToDo(); });
 
                 newButton.transform.SetParent(contentPanel);
+                remainingResourseList.Add(resource);
             }
         }
     }
 
-    //public void SomethingToDo()
-    //{
-
-    //}
+    public void SomethingToDo()
+    {
+        PopulateRemainingList();
+    }
 }

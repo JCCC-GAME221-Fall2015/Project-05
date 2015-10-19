@@ -17,6 +17,7 @@ public class ScriptBoardCorner : MonoBehaviour {
 
     public bool CheckValidBuild()
     {
+        Debug.Log("Checking Valid Build");
         foreach(ScriptBoardEdge road in adjacentRoads)
         {
             if (road.owner == engine.players[0])
