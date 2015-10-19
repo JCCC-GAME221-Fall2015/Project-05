@@ -76,7 +76,7 @@ public class GameInformation : MonoBehaviour {
         {
             if(panelOptions != null)
             {
-//                panelOptions.gameObject.SetActive(false); // Craig
+                panelOptions.gameObject.SetActive(false); // Craig //Undone Andrew
             }
         }
     }
