@@ -38,7 +38,6 @@
             this.nameBox = new System.Windows.Forms.TextBox();
             this.countBox = new System.Windows.Forms.NumericUpDown();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.activationBox = new System.Windows.Forms.NumericUpDown();
             this.radioButtonSwitch4 = new RadioButtonSwitch();
             this.radioButtonSwitch1 = new RadioButtonSwitch();
             this.radioButtonSwitch19 = new RadioButtonSwitch();
@@ -58,6 +57,7 @@
             this.radioButtonSwitch10 = new RadioButtonSwitch();
             this.radioButtonSwitch12 = new RadioButtonSwitch();
             this.radioButtonSwitch11 = new RadioButtonSwitch();
+            this.activationBox = new System.Windows.Forms.NumericUpDown();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.countBox)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -95,8 +95,8 @@
             // 
             // loadToolStripMenuItem
             // 
-            this.loadToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Strikeout, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.loadToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ActiveBorder;
+            this.loadToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.loadToolStripMenuItem.ForeColor = System.Drawing.SystemColors.MenuText;
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
             this.loadToolStripMenuItem.Size = new System.Drawing.Size(269, 38);
             this.loadToolStripMenuItem.Text = "Open";
@@ -217,19 +217,6 @@
             this.groupBox1.TabIndex = 52;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Tiles";
-            // 
-            // activationBox
-            // 
-            this.activationBox.Location = new System.Drawing.Point(339, 173);
-            this.activationBox.Maximum = new decimal(new int[] {
-            6,
-            0,
-            0,
-            0});
-            this.activationBox.Name = "activationBox";
-            this.activationBox.Size = new System.Drawing.Size(121, 31);
-            this.activationBox.TabIndex = 53;
-            this.activationBox.ValueChanged += new System.EventHandler(this.activationBox_ValueChanged);
             // 
             // radioButtonSwitch4
             // 
@@ -457,6 +444,19 @@
             this.radioButtonSwitch11.TabStop = true;
             this.radioButtonSwitch11.UseVisualStyleBackColor = true;
             this.radioButtonSwitch11.CheckedChanged += new System.EventHandler(this.radioButtonSwitch_CheckedChanged);
+            // 
+            // activationBox
+            // 
+            this.activationBox.Location = new System.Drawing.Point(339, 173);
+            this.activationBox.Maximum = new decimal(new int[] {
+            6,
+            0,
+            0,
+            0});
+            this.activationBox.Name = "activationBox";
+            this.activationBox.Size = new System.Drawing.Size(121, 31);
+            this.activationBox.TabIndex = 53;
+            this.activationBox.ValueChanged += new System.EventHandler(this.activationBox_ValueChanged);
             // 
             // Form1
             // 

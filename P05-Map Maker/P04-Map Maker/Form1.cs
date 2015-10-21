@@ -30,7 +30,7 @@ namespace P04_Map_Maker {
             ChangeFields(0);
 
             nameBox.Text = worldName;
-        }   
+        }
 
         #region menu strip
 
@@ -49,7 +49,7 @@ namespace P04_Map_Maker {
             }
 
             radioButtonSwitch1.Checked = true;
-            ChangeFields( 0 );
+            ChangeFields(0);
         }
 
         void openToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -64,7 +64,7 @@ namespace P04_Map_Maker {
 
         #region Value Handlers
 
-        private void nameBox_TextChanged( object sender, EventArgs e ) {
+        void nameBox_TextChanged(object sender, EventArgs e) {
             worldName = nameBox.Text;
         }
 
@@ -144,16 +144,17 @@ namespace P04_Map_Maker {
                             string line = sr.ReadLine();
                             string[] snippets = line.Split();
 
-                            newNodes[i] = new Node( (NodeType)Enum.Parse(typeof(NodeType), snippets[0]), Convert.ToInt32(snippets[1]), Convert.ToInt32(snippets[2]));
+                            newNodes[i] = new Node((NodeType) Enum.Parse(typeof (NodeType), snippets[0]),
+                                                   Convert.ToInt32(snippets[1]),
+                                                   Convert.ToInt32(snippets[2]));
 
-                            Console.WriteLine(newNodes[i]);
-
+                            nodes = newNodes;
+                            worldName = newName;
+                            nameBox.Text = worldName;
                         }
                     } catch (Exception) {
-                        
-                        throw;
+                        MessageBox.Show("File read error");
                     }
-
                 }
             }
         }
@@ -162,15 +163,17 @@ namespace P04_Map_Maker {
         /// Exports the nodes to a file next to the build named using the worldname
         /// </summary>
         void ExportNodes() {
-            using ( StreamWriter sw = new StreamWriter( $"{nameBox.Text}.txt" ) ) {
-                string fullPath = ( (FileStream)( sw.BaseStream ) ).Name;
-                Console.WriteLine( fullPath );
+            using (StreamWriter sw = new StreamWriter($"{nameBox.Text}.txt")) {
+                string fullPath = ((FileStream) (sw.BaseStream)).Name;
+                Console.WriteLine(fullPath);
 
-                sw.WriteLine( worldName );
-                foreach ( Node node in nodes ) {
-                    sw.WriteLine( node.Type + " " + node.Activation + " " + node.Count );
+                sw.WriteLine(worldName);
+                foreach (Node node in nodes) {
+                    sw.WriteLine(node.Type + " " + node.Activation + " " + node.Count);
                 }
             }
+
+            MessageBox.Show($"file saved as {nameBox.Text}.txt");
         }
 
     }
