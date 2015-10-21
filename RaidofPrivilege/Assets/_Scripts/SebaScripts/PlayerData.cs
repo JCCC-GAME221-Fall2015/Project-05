@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 /// <summary>
 /// @Author: Andrew Seba
 /// @Description: Holds all resource data and player actions.
 /// </summary>
-public class PlayerData : MonoBehaviour {
+public class PlayerData : NetworkBehaviour{
 
     [HideInInspector]
     public GameState curPhase;
@@ -33,12 +34,6 @@ public class PlayerData : MonoBehaviour {
     [HideInInspector]
     public List<string> playerActions;
 
-    
-
-    //public PlayerData(string pName)
-    //{
-        
-    //}
 
     void Start()
     {
@@ -53,10 +48,14 @@ public class PlayerData : MonoBehaviour {
 
         transform.parent = GameObject.Find("Player").transform;
 
-        grainAmount = GameObject.Find("Text_GrainAmount").GetComponent<Text>();
-        brickAmount = GameObject.Find("Text_BrickAmount").GetComponent<Text>();
-        woodAmount = GameObject.Find("Text_WoodAmount").GetComponent<Text>();
-        woolAmount = GameObject.Find("Text_WoolAmount").GetComponent<Text>();
+        if (isLocalPlayer)
+        {
+            grainAmount = GameObject.Find("Text_GrainAmount").GetComponent<Text>();
+            brickAmount = GameObject.Find("Text_BrickAmount").GetComponent<Text>();
+            woodAmount = GameObject.Find("Text_WoodAmount").GetComponent<Text>();
+            woolAmount = GameObject.Find("Text_WoolAmount").GetComponent<Text>();
+        }
+
     }
 
     public void GainResources(int diceRoll)

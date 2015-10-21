@@ -7,11 +7,13 @@ using System.Collections.Generic;
 /// </summary>
 public class ScriptTradeWindow : MonoBehaviour {
 
-    public Transform contentPanel;
+    public Transform myResourceContentPanel;
+    public Transform givingResourceContentPanel;
 
     public GameObject prefabButtonRemaining;
     public List<ScriptItem> gameResources;
-    public List<ScriptItem> remainingResourseList;
+    public List<ScriptItem> remainingResourse;
+    public List<ScriptItem> givingResources;
 
     PlayerData playerData;
 
@@ -26,6 +28,15 @@ public class ScriptTradeWindow : MonoBehaviour {
             players[0].
             GetComponent<PlayerData>();
 
+        PopulateListWithDefaultResources();
+
+        PopulateButtonLists();
+    }
+
+    void PopulateListWithDefaultResources()
+    {
+        gameResources = new List<ScriptItem>();
+
         ScriptItem wood = new ScriptItem("Wood", playerData.wood);
         gameResources.Add(wood);
 
@@ -37,8 +48,6 @@ public class ScriptTradeWindow : MonoBehaviour {
 
         ScriptItem grain = new ScriptItem("Grain", playerData.grain);
         gameResources.Add(grain);
-
-        PopulateRemainingList();
     }
 
 
@@ -46,11 +55,29 @@ public class ScriptTradeWindow : MonoBehaviour {
     /// Populates the remaning resource list with resources that you have with
     /// a value above 0 so that you know that you have it or not to trade.
     /// </summary>
-    void PopulateRemainingList()
+    void PopulateButtonLists()
     {
         foreach(ScriptItem resource in gameResources)
         {
-            if (resource.resourceAmount > 0 && !remainingResourseList.Contains(resource))
+            if (resource.resourceAmount > 0 && !remainingResourse.Contains(resource))
+            {
+                GameObject newButton = (GameObject)Instantiate(prefabButtonRemaining);
+                SampleButtonRemaining tempButton = newButton.GetComponent<SampleButtonRemaining>();
+
+                tempButton.name = resource.resourceName + "Button";
+                tempButton.resourceName.text = resource.resourceName;
+                tempButton.resourceAmount.text = resource.resourceAmount.ToString();
+
+                tempButton.button.onClick.AddListener(delegate { AddToGiveList(tempButton.resourceName.text); });
+
+                newButton.transform.SetParent(myResourceContentPanel);
+                remainingResourse.Add(resource);
+            }
+        }
+
+        foreach(ScriptItem resource in givingResources)
+        {
+            if (resource.resourceAmount > 0 && !givingResources.Contains(givingResources.Find(item => item == resource)))
             {
                 GameObject newButton = (GameObject)Instantiate(prefabButtonRemaining);
                 SampleButtonRemaining tempButton = newButton.GetComponent<SampleButtonRemaining>();
@@ -58,19 +85,69 @@ public class ScriptTradeWindow : MonoBehaviour {
                 tempButton.resourceName.text = resource.resourceName;
                 tempButton.resourceAmount.text = resource.resourceAmount.ToString();
 
-                tempButton.button.onClick.AddListener(delegate { SomethingToDo(); });
+                //tempButton.button.onClick.AddListener(delegate { })
 
-                newButton.transform.SetParent(contentPanel);
-                remainingResourseList.Add(resource);
+                newButton.transform.SetParent(givingResourceContentPanel);
+
             }
+
         }
     }
 
     /// <summary>
-    /// Button Function.
+    /// For some reason I can only get strings to pass through this button.
     /// </summary>
-    public void SomethingToDo()
+    public void AddToGiveList(string pName)
     {
-        PopulateRemainingList();
+
+        ScriptItem givingItem;
+
+        switch (pName)
+        {
+            case "Wood":
+                givingItem = gameResources.Find(item => item.resourceName == "Wood");
+                break;
+            case "Wool":
+                givingItem = gameResources.Find(item => item.resourceName == "Wool");
+                break;
+            case "Brick":
+                givingItem = gameResources.Find(item => item.resourceName == "Brick");
+                break;
+            case "Grain":
+                givingItem = gameResources.Find(item => item.resourceName == "Grain");
+                break;
+            default:
+                givingItem = null;
+                break;
+        }
+
+        if(remainingResourse.Find(item => item == givingItem).resourceAmount > 0)
+        {
+            remainingResourse.Find(item => item == givingItem).resourceAmount -= 1;
+        }
+        else
+        {
+            remainingResourse.Remove(remainingResourse.Find(item => item == givingItem));
+        }
+        
+
+
+        if (!givingResources.Contains(givingItem) && givingItem != null)
+        {
+            Debug.Log("Adding new Button");
+
+            
+            givingResources.Add(givingItem);
+            givingItem.resourceAmount = 1;
+
+        }
+        else
+        {
+            Debug.Log("Adding to old button");
+            givingItem = givingResources.Find(item => item == givingItem);
+            givingItem.resourceAmount += 1;
+        }
+
+        PopulateButtonLists();
     }
 }

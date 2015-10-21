@@ -1,7 +1,0 @@
-Andrew
-GameName
-GAMESTART
-6
-3
-6
-5
