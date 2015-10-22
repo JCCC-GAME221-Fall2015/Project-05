@@ -56,7 +56,6 @@ public class ScriptPlayer : NetworkBehaviour {
 
     void Start()
     {
-
         wood = 0;
         wool = 0;
         brick = 0;
