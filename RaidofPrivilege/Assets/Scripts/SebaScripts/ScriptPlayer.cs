@@ -8,7 +8,7 @@ using System.Collections;
 /// @Author: Andrew Seba
 /// @Description: Holds all resource data and player actions.
 /// </summary>
-public class PlayerData : NetworkBehaviour {
+public class ScriptPlayer : NetworkBehaviour {
 
     Dictionary<ScriptPhaseTransition, GameState> allTransitions; //a dictionary of phase transitions
     Dictionary<string, StateCommands> enumParse;
@@ -27,7 +27,7 @@ public class PlayerData : NetworkBehaviour {
     Text woodAmount;
     Text woolAmount;
 
-    public string PlayerName;
+
     #region Phase 2 Variables
     GameObject tradeWindowButton;
     #endregion
@@ -42,8 +42,12 @@ public class PlayerData : NetworkBehaviour {
     public List<GameObject> settlements;
     public List<GameObject> roads;
 
+    #region Network Variables
+    public string playerName;
     public bool endTurn = false;
+    Time time;
 
+    #endregion
 
     public int numSettlements { get; set; }
 
@@ -151,6 +155,7 @@ public class PlayerData : NetworkBehaviour {
     #region Phase 0
     void Phase0()
     {
+        time = new Time();
         PhaseTextTransition();
         Debug.Log("Entering Phase 0");
         StartCoroutine("StartGame");
@@ -191,9 +196,12 @@ public class PlayerData : NetworkBehaviour {
 
                         if (Input.GetMouseButtonDown(0))
                         {
-                            hit.transform.GetComponent<ScriptBoardCorner>().owner = this;
-                            settlements.Add(hit.transform.gameObject);//Andrew Seba
-                                                                      //allEmptySettlements.Remove(hit.collider.gameObject);
+                            GameObject settlement = hit.transform.gameObject;
+                            settlement.GetComponent<ScriptBoardCorner>().owner = this;
+                            settlements.Add(settlement);//Andrew Seba
+                            AddAction(playerName + "," + time + settlement.transform.position);
+
+                            
                             break;
                         }
                     }
@@ -596,9 +604,7 @@ public class PlayerData : NetworkBehaviour {
     /// <param name="pAction"></param>
     public void AddAction(string pAction)
     {
-        /*saving Heuristic (prototype)
-
-        "build","road or settlement","ArrayLocation"   email me when you figure it out*/
+        Debug.Log(pAction);
         playerActions.Add(pAction);
     }
 

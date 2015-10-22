@@ -15,7 +15,7 @@ public class ScriptTradeWindow : MonoBehaviour {
     public List<ScriptItem> remainingResourse;
     public List<ScriptItem> givingResources;
 
-    PlayerData playerData;
+    ScriptPlayer playerData;
 
     /// <summary>
     /// Adds the game resources to a list of resources that we might display
@@ -23,7 +23,7 @@ public class ScriptTradeWindow : MonoBehaviour {
     /// </summary>
     public void InitList()
     {
-        playerData = gameObject.GetComponent<PlayerData>();
+        playerData = gameObject.GetComponent<ScriptPlayer>();
 
         PopulateListWithDefaultResources();
 

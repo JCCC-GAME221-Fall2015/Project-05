@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class ScriptBoardEdge : MonoBehaviour {
 
 
-    public PlayerData owner = null;
+    public ScriptPlayer owner = null;
     public List<ScriptBoardEdge> adjacentRoads = new List<ScriptBoardEdge>(0);
     public List<ScriptBoardCorner> adjacentSettlements = new List<ScriptBoardCorner>(0);
     public Time time;
@@ -15,9 +15,9 @@ public class ScriptBoardEdge : MonoBehaviour {
     {
         foreach (ScriptBoardEdge road in adjacentRoads)
         {
-            if (road.owner == player.GetComponent<PlayerData>())
+            if (road.owner == player.GetComponent<ScriptPlayer>())
             {
-                owner = player.GetComponent<PlayerData>();
+                owner = player.GetComponent<ScriptPlayer>();
                 return true;
             }
         }
@@ -28,9 +28,9 @@ public class ScriptBoardEdge : MonoBehaviour {
     {
         foreach (ScriptBoardCorner settlement in adjacentSettlements)
         {
-            if (settlement.owner == player.GetComponent<PlayerData>())
+            if (settlement.owner == player.GetComponent<ScriptPlayer>())
             {
-                owner = player.GetComponent<PlayerData>();
+                owner = player.GetComponent<ScriptPlayer>();
                 return true;
             }
         }

@@ -98,7 +98,7 @@ public class InformationSave : MonoBehaviour {
     */
 	public void SaveGame()
 	{
-		PlayerData playerData = GameObject.Find("SceneManager").GetComponent<PlayerData>();
+		ScriptPlayer playerData = GameObject.Find("SceneManager").GetComponent<ScriptPlayer>();
 		
 		StreamWriter writer = null;
 		using (writer = new StreamWriter(txtInfoLocation + outputFile))
@@ -139,7 +139,7 @@ public class InformationSave : MonoBehaviour {
 	public void SaveGame2() // Craig
 	{
 		string outputString;
-		PlayerData playerData = GameObject.Find("SceneManager").GetComponent<PlayerData>();
+		ScriptPlayer playerData = GameObject.Find("SceneManager").GetComponent<ScriptPlayer>();
 		GameObject[] hexes;
 		GameObject[] roads;
 		GameObject[] settlements;
@@ -182,7 +182,7 @@ public class InformationSave : MonoBehaviour {
 				{
 					outputString = "RN=" + roads[i].name.ToString() +
 						"#RP=" + roads[i].transform.position.ToString() +
-							"#RO=" + roads[i].GetComponent<ScriptBoardEdge>().owner.PlayerName.ToString() +
+							"#RO=" + roads[i].GetComponent<ScriptBoardEdge>().owner.playerName.ToString() +
 							"#";
 				}
 				writer.WriteLine(outputString);
@@ -204,7 +204,7 @@ public class InformationSave : MonoBehaviour {
 					outputString = "SN=" + settlements[i].name.ToString() +
 						"#SP=" + settlements[i].transform.position.ToString() +
 							"#SR=" + settlements[i].transform.rotation.ToString() +
-							"#SO=" + settlements[i].GetComponent<ScriptBoardCorner>().owner.PlayerName.ToString() +
+							"#SO=" + settlements[i].GetComponent<ScriptBoardCorner>().owner.playerName.ToString() +
 							"#";
 				}
 				writer.WriteLine(outputString);

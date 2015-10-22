@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class ScriptBoardCorner : MonoBehaviour {
 
-    public PlayerData owner = null;
+    public ScriptPlayer owner = null;
     public bool roadUp;
     public List<ScriptBoardHex> adjacentHexes = new List<ScriptBoardHex>(0);
     public List<ScriptBoardEdge> adjacentRoads = new List<ScriptBoardEdge>(0);
@@ -16,9 +16,9 @@ public class ScriptBoardCorner : MonoBehaviour {
         Debug.Log("Checking Valid Build");
         foreach(ScriptBoardEdge road in adjacentRoads)
         {
-            if (road.owner == player.GetComponent<PlayerData>())
+            if (road.owner == player.GetComponent<ScriptPlayer>())
             {
-                owner = player.GetComponent<PlayerData>();
+                owner = player.GetComponent<ScriptPlayer>();
                 return true;
             }
         }

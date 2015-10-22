@@ -36,7 +36,7 @@ public enum StateCommands
 public class ScriptEngine : MonoBehaviour
 {
 
-    public List<PlayerData> players = new List<PlayerData>();
+    public List<ScriptPlayer> players = new List<ScriptPlayer>();
 
     //ScriptPlayer player = new ScriptPlayer("Mike");
     Dictionary<ScriptPhaseTransition, GameState> allTransitions; //a dictionary of phase transitions
@@ -119,7 +119,7 @@ public class ScriptEngine : MonoBehaviour
         //Populate List //Andrew Seba
         foreach(GameObject player in GameObject.FindGameObjectsWithTag("Player"))
         {
-            players.Add(player.GetComponent<PlayerData>());
+            players.Add(player.GetComponent<ScriptPlayer>());
 
         }
         //setup the current state
@@ -589,7 +589,7 @@ public class ScriptEngine : MonoBehaviour
         while (true)
         {
             endTurn = true;
-            foreach (PlayerData player in players)
+            foreach (ScriptPlayer player in players)
             {
                 if (endTurn == true && player.endTurn == false)
                 {
@@ -683,7 +683,7 @@ public class ScriptEngine : MonoBehaviour
     void Phase6(int player)
     {
         Debug.Log("Entering Phase 6 (End Game)");
-        WinnerText.text = ("Winner: " + players[player].PlayerName);
+        WinnerText.text = ("Winner: " + players[player].playerName);
     }
 
     public void QuitApplication()
