@@ -3,6 +3,29 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections;
+//Mike
+public enum GameState
+{
+    PHASE0,//GameStart
+    PHASE1,//Roll
+    PHASE2,//Trade
+    PHASE3,//Build
+    PHASE4,//Process
+    PHASE5,//EndGame
+    PHASE6//Win
+}
+//Mike
+public enum StateCommands
+{
+    GOTO_PHASE0,
+    GOTO_PHASE1,
+    GOTO_PHASE2,
+    GOTO_PHASE3,
+    GOTO_PHASE4,
+    GOTO_PHASE5,
+    GOTO_PHASE6,
+    QUIT_APPLICATION
+}
 
 /// <summary>
 /// @Author: Andrew Seba
@@ -16,6 +39,9 @@ public class ScriptPlayer : NetworkBehaviour {
     public GameState CurrentState { get; private set; } //the current state of the game
     public GameState PreviousState { get; private set; } //the previous state of the game
 
+    public ScriptGameManager gameManager;
+
+    #region Player Variables
     public int wood { get; set; }
     public int wool { get; set; }
     public int brick { get; set; }
@@ -27,6 +53,10 @@ public class ScriptPlayer : NetworkBehaviour {
     Text woodAmount;
     Text woolAmount;
 
+    public List<GameObject> settlements;
+    public List<GameObject> roads;
+    public int numSettlements { get; set; }
+    #endregion
 
     #region Phase 2 Variables
     GameObject tradeWindowButton;
@@ -39,9 +69,6 @@ public class ScriptPlayer : NetworkBehaviour {
     GameObject BuildRoadButton; //build road button
     #endregion
 
-    public List<GameObject> settlements;
-    public List<GameObject> roads;
-
     #region Network Variables
     public string playerName;
     public bool endTurn = false;
@@ -49,13 +76,15 @@ public class ScriptPlayer : NetworkBehaviour {
 
     #endregion
 
-    public int numSettlements { get; set; }
 
     [HideInInspector]
     public List<string> playerActions;
 
+    //Mike Dobson & Andrew Seba Engine collaberation from here down unless otherwise noted
     void Start()
     {
+        gameManager = GameObject.Find("GameManager").GetComponent<ScriptGameManager>();
+
         wood = 0;
         wool = 0;
         brick = 0;
@@ -148,11 +177,265 @@ public class ScriptPlayer : NetworkBehaviour {
         };
 
         Debug.Log("Current state: " + CurrentState);
-        Phase0();
+        //Phase0();
     }
 
+    void Update()
+    { 
+        //Cheat codes
+    #if UNITY_EDITOR
+        if (Input.GetKeyDown("1"))
+        {
+            grain++;
+        }
+        if (Input.GetKeyDown("2"))
+        {
+            brick++;
+        }
+        if (Input.GetKeyDown("3"))
+        {
+            wood++;
+        }
+        if (Input.GetKeyDown("4"))
+        {
+            wool++;
+        }
+    #endif
+    }
+
+    #region Player Methods
+    public void GainResources(int diceRoll)
+    {
+        foreach (GameObject settlement in settlements)
+        {
+            settlement.GetComponent<ScriptBoardCorner>().GainResources(diceRoll);
+        }
+    }
+
+    public void AddAction(string pAction)
+    {
+        Debug.Log(pAction);
+        playerActions.Add(pAction);
+    }
+
+    public void ChangeGrain(int pAmount)
+    {
+        grain += pAmount;
+        UpdateResourceText();
+    }
+
+    public void ChangeBrick(int pAmount)
+    {
+        brick += pAmount;
+        UpdateResourceText();
+    }
+
+    public void ChangeWood(int pAmount)
+    {
+        wood += pAmount;
+        UpdateResourceText();
+    }
+
+    public void ChangeWool(int pAmount)
+    {
+        wool += pAmount;
+        UpdateResourceText();
+    }
+
+    void UpdateResourceText()
+    {
+        try
+        {
+            grainAmount.text = grain.ToString();
+            brickAmount.text = brick.ToString();
+            woodAmount.text = wood.ToString();
+            woolAmount.text = wool.ToString();
+        }
+        catch
+        {
+            Debug.LogError("No Text to update resources.");
+        }
+
+    }
+    #endregion
+
+    #region Common Class Methods
+
+    /// <summary>
+    /// @Author: Andrew Seba
+    /// @Description: Takes the current phase and calls the transition engine.
+    /// Button should only be available if done with phase.
+    /// </summary>
+    public void _NextPhaseButton()
+    {
+        if(isLocalPlayer)
+        {
+            switch (CurrentState)
+            {
+                case GameState.PHASE0:
+                    MoveNextAndTransition("goto phase 5");
+                    break;
+                case GameState.PHASE1:
+                    MoveNextAndTransition("goto phase 2");
+                    break;
+                case GameState.PHASE2:
+                    MoveNextAndTransition("goto phase 3");
+                    break;
+                case GameState.PHASE3:
+                    MoveNextAndTransition("goto phase 4");
+                    break;
+                case GameState.PHASE4:
+                    break;
+                case GameState.PHASE5:
+                    break;
+
+            }
+        }
+    }
+
+    public void LoadTransition(GameState state, string command)
+    {
+        CurrentState = state;
+        switch (state)
+        {
+            case GameState.PHASE1:
+                PreviousState = GameState.PHASE5;
+                //phase1menu.SetActive(true);
+                break;
+            case GameState.PHASE2:
+                PreviousState = GameState.PHASE1;
+                MoveNextAndTransition(command);
+                break;
+            case GameState.PHASE3:
+                PreviousState = GameState.PHASE2;
+                MoveNextAndTransition(command);
+                break;
+            case GameState.PHASE4:
+                PreviousState = GameState.PHASE3;
+                MoveNextAndTransition(command);
+                break;
+        }
+    }
+
+
+    void PhaseTextTransition()
+    {
+        if (PhaseText != null)
+        {
+            switch (CurrentState)
+            {
+                case GameState.PHASE0:
+                    PhaseText.text = "Setup Phase";
+                    break;
+                case GameState.PHASE1:
+                    PhaseText.text = "Rolling Dice";
+                    break;
+                case GameState.PHASE2:
+                    PhaseText.text = "Trade";
+                    break;
+                case GameState.PHASE3:
+                    PhaseText.text = "Build";
+                    break;
+                case GameState.PHASE4:
+                    PhaseText.text = "End Turn";
+                    break;
+                case GameState.PHASE5:
+                    PhaseText.text = "Processing";
+                    break;
+                case GameState.PHASE6:
+                    PhaseText.text = "Winner is:";
+                    break;
+                default:
+                    PhaseText.text = "Current Phase Text";
+                    break;
+            }
+        }
+        else
+        {
+            //throw new UnityException("No Phase text in Engine");
+            Debug.Log("No Phase text in Engine.");
+        }
+    }
+
+    GameState GetNext(StateCommands command)
+    {
+        //construct transition based on machine current state and the command
+        ScriptPhaseTransition newTransition = new ScriptPhaseTransition(CurrentState, command);
+
+        //store the location to got to here
+        GameState newState;
+
+        if (!allTransitions.TryGetValue(newTransition, out newState))
+            throw new UnityException("Invalid Game State transition " + CurrentState + " -> " + command);
+
+        //return the new state
+        return newState;
+    }
+
+    public void MoveNextAndTransition(string command)
+    {
+        //record the previous state of the machine
+        PreviousState = CurrentState;
+
+        //location for the new command
+        StateCommands newCommand;
+
+        //try to get the value of the command
+        if (!enumParse.TryGetValue(command, out newCommand))
+            throw new UnityException("Invalid command  -> " + command);
+
+        //setup the new state
+        CurrentState = GetNext(newCommand);
+
+        Debug.Log("Transitioning from " + PreviousState + " -> " + CurrentState);
+        //transition the game to the next state
+
+        Transition();
+
+    }
+
+
+
+    public void Transition()
+    {
+        switch (PreviousState)
+        {
+            case GameState.PHASE0:
+                //Phase5();
+                break;
+            case GameState.PHASE1:
+                tradeWindowButton.SetActive(true);
+                Phase2();
+                break;
+            case GameState.PHASE2:
+                tradeWindowButton.SetActive(false);
+                Phase3();
+                break;
+            case GameState.PHASE3:
+                BuildPhaseMenu.SetActive(true);
+                Phase4();
+                break;
+            case GameState.PHASE4:
+                //phase4menu.SetActive(false);
+                //Phase5();
+                break;
+            case GameState.PHASE5:
+                if (CurrentState == GameState.PHASE1)
+                {
+                    //phase1menu.SetActive(true);
+                    Phase1();
+                }
+                else
+                {
+                    //Phase6(winningPlayerNumber);//TODO
+                }
+                break;
+        }
+    }
+    #endregion
+
     #region Phase 0
-    void Phase0()
+    public void Phase0()
     {
         time = new Time();
         PhaseTextTransition();
@@ -165,7 +448,7 @@ public class ScriptPlayer : NetworkBehaviour {
     {
         yield return StartCoroutine("GetSettlement");
         yield return StartCoroutine("GetRoad");
-
+        MoveNextAndTransition("goto phase 5");
         //phase0button.SetActive(true);
     }
 
@@ -198,7 +481,10 @@ public class ScriptPlayer : NetworkBehaviour {
                             GameObject settlement = hit.transform.gameObject;
                             settlement.GetComponent<ScriptBoardCorner>().owner = this;
                             settlements.Add(settlement);//Andrew Seba
-                            AddAction(playerName + "," + time + settlement.transform.position);
+                            AddAction(playerName + "," + time + ",settlement," 
+                                + settlement.transform.position.x + 
+                                "," + settlement.transform.position.y + 
+                                "," + settlement.transform.position.z);
 
                             
                             break;
@@ -248,7 +534,6 @@ public class ScriptPlayer : NetworkBehaviour {
     }
     #endregion
 
-    //Mike Dobson engine collaboration.
     #region Phase 1
     void Phase1()
     {
@@ -421,7 +706,7 @@ public class ScriptPlayer : NetworkBehaviour {
         Debug.Log("Entering Phase 4");
         PhaseTextTransition();
         //ResourcesText();
-        StartCoroutine("CheckForEndTurn");
+        //StartCoroutine("CheckForEndTurn");
 
 
     }
@@ -446,228 +731,16 @@ public class ScriptPlayer : NetworkBehaviour {
     }
     #endregion
 
-    #region Common Class Methods
-
-    public void LoadTransition(GameState state, string command)
+    #region Phase 6
+    void Phase6(int player)
     {
-        CurrentState = state;
-        switch (state)
-        {
-            case GameState.PHASE1:
-                PreviousState = GameState.PHASE5;
-                //phase1menu.SetActive(true);
-                break;
-            case GameState.PHASE2:
-                PreviousState = GameState.PHASE1;
-                MoveNextAndTransition(command);
-                break;
-            case GameState.PHASE3:
-                PreviousState = GameState.PHASE2;
-                MoveNextAndTransition(command);
-                break;
-            case GameState.PHASE4:
-                PreviousState = GameState.PHASE3;
-                MoveNextAndTransition(command);
-                break;
-        }
+        Debug.Log("Entering Phase 6 (End Game)");
+        //WinnerText.text = ("Winner: " + players[player].playerName);
     }
 
-
-    void PhaseTextTransition()
+    public void QuitApplication()
     {
-        if (PhaseText != null)
-        {
-            switch (CurrentState)
-            {
-                case GameState.PHASE0:
-                    PhaseText.text = "Setup Phase";
-                    break;
-                case GameState.PHASE1:
-                    PhaseText.text = "Rolling Dice";
-                    break;
-                case GameState.PHASE2:
-                    PhaseText.text = "Trade";
-                    break;
-                case GameState.PHASE3:
-                    PhaseText.text = "Build";
-                    break;
-                case GameState.PHASE4:
-                    PhaseText.text = "End Turn";
-                    break;
-                case GameState.PHASE5:
-                    PhaseText.text = "Processing";
-                    break;
-                case GameState.PHASE6:
-                    PhaseText.text = "Winner is:";
-                    break;
-                default:
-                    PhaseText.text = "Current Phase Text";
-                    break;
-            }
-        }
-        else
-        {
-            //throw new UnityException("No Phase text in Engine");
-            Debug.Log("No Phase text in Engine.");
-        }
-    }
-
-    GameState GetNext(StateCommands command)
-    {
-        //construct transition based on machine current state and the command
-        ScriptPhaseTransition newTransition = new ScriptPhaseTransition(CurrentState, command);
-
-        //store the location to got to here
-        GameState newState;
-
-        if (!allTransitions.TryGetValue(newTransition, out newState))
-            throw new UnityException("Invalid Game State transition " + CurrentState + " -> " + command);
-
-        //return the new state
-        return newState;
-    }
-
-    public void MoveNextAndTransition(string command)
-    {
-        //record the previous state of the machine
-        PreviousState = CurrentState;
-
-        //location for the new command
-        StateCommands newCommand;
-
-        //try to get the value of the command
-        if (!enumParse.TryGetValue(command, out newCommand))
-            throw new UnityException("Invalid command  -> " + command);
-
-        //setup the new state
-        CurrentState = GetNext(newCommand);
-
-        Debug.Log("Transitioning from " + PreviousState + " -> " + CurrentState);
-        //transition the game to the next state
-
-        Transition();
-
-    }
-
-
-
-    public void Transition()
-    {
-        switch (PreviousState)
-        {
-            case GameState.PHASE0:
-                //Phase5();
-                break;
-            case GameState.PHASE1:
-                tradeWindowButton.SetActive(true);
-                Phase2();
-                break;
-            case GameState.PHASE2:
-                tradeWindowButton.SetActive(false);
-                Phase3();
-                break;
-            case GameState.PHASE3:
-                BuildPhaseMenu.SetActive(true);
-                Phase4();
-                break;
-            case GameState.PHASE4:
-                //phase4menu.SetActive(false);
-                //Phase5();
-                break;
-            case GameState.PHASE5:
-                if (CurrentState == GameState.PHASE1)
-                {
-                    //phase1menu.SetActive(true);
-                    Phase1();
-                }
-                else
-                {
-                    //Phase6(winningPlayerNumber);//TODO
-                }
-                break;
-        }
+        Application.Quit();
     }
     #endregion
-
-    public void GainResources(int diceRoll)
-    {
-        foreach (GameObject settlement in settlements)
-        {
-            settlement.GetComponent<ScriptBoardCorner>().GainResources(diceRoll);
-        }
-    }
-
-    /// <summary>
-    /// Adds a string to the player Actions list for saving later
-    /// </summary>
-    /// <param name="pAction"></param>
-    public void AddAction(string pAction)
-    {
-        Debug.Log(pAction);
-        playerActions.Add(pAction);
-    }
-
-    void Update()
-    { 
-        //Cheat codes
-    #if UNITY_EDITOR
-        if (Input.GetKeyDown("1"))
-        {
-            grain++;
-        }
-        if (Input.GetKeyDown("2"))
-        {
-            brick++;
-        }
-        if (Input.GetKeyDown("3"))
-        {
-            wood++;
-        }
-        if (Input.GetKeyDown("4"))
-        {
-            wool++;
-        }
-    #endif
-
-    }
-
-    public void ChangeGrain(int pAmount)
-    {
-        grain += pAmount;
-        UpdateResourceText();
-    }
-
-    public void ChangeBrick(int pAmount)
-    {
-        brick += pAmount;
-        UpdateResourceText();
-    }
-
-    public void ChangeWood(int pAmount)
-    {
-        wood += pAmount;
-        UpdateResourceText();
-    }
-
-    public void ChangeWool(int pAmount)
-    {
-        wool += pAmount;
-        UpdateResourceText();
-    }
-
-    void UpdateResourceText()
-    {
-        try
-        {
-            grainAmount.text = grain.ToString();
-            brickAmount.text = brick.ToString();
-            woodAmount.text = wood.ToString();
-            woolAmount.text = wool.ToString();
-        }
-        catch
-        {
-            Debug.LogError("No Text to update resources.");
-        }
-
-    }
 }
