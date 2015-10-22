@@ -244,8 +244,8 @@ public class InformationSave : MonoBehaviour {
 		{
 			foreach(ScriptPlayer player in gameManagerScript.players)
 	        {
-				outputString = "PN=" + player.userName.ToString() +
-					"#LN=" + player.levelName.ToString() +
+				outputString = "PN=" + player.playerName.ToString() +
+					"#LN=" + player.playerName.ToString() +
 					"#CP=" + player.CurrentState.ToString() +
 					"#WD=" + player.wood.ToString() +
 					"#WL=" + player.wool.ToString() +

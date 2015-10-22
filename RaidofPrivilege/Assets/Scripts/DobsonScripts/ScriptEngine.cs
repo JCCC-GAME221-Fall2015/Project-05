@@ -10,28 +10,28 @@ using UnityEngine.UI;
 /// for each of the phases.
 /// </summary>
 
-public enum GameState
-{
-    PHASE0,//GameStart
-    PHASE1,//Roll
-    PHASE2,//Trade
-    PHASE3,//Build
-    PHASE4,//Process
-    PHASE5,//EndGame
-    PHASE6//Win
-}
+//public enum GameState
+//{
+//    PHASE0,//GameStart
+//    PHASE1,//Roll
+//    PHASE2,//Trade
+//    PHASE3,//Build
+//    PHASE4,//Process
+//    PHASE5,//EndGame
+//    PHASE6//Win
+//}
 
-public enum StateCommands
-{
-    GOTO_PHASE0,
-    GOTO_PHASE1,
-    GOTO_PHASE2,
-    GOTO_PHASE3,
-    GOTO_PHASE4,
-    GOTO_PHASE5,
-    GOTO_PHASE6,
-    QUIT_APPLICATION
-}
+//public enum StateCommands
+//{
+//    GOTO_PHASE0,
+//    GOTO_PHASE1,
+//    GOTO_PHASE2,
+//    GOTO_PHASE3,
+//    GOTO_PHASE4,
+//    GOTO_PHASE5,
+//    GOTO_PHASE6,
+//    QUIT_APPLICATION
+//}
 
 public class ScriptEngine : MonoBehaviour
 {
@@ -165,153 +165,153 @@ public class ScriptEngine : MonoBehaviour
 
     #region Common Class Methods
 
-    public void LoadTransition(GameState state, string command)
-    {
-        CurrentState = state;
-        switch(state)
-        {
-            case GameState.PHASE1:
-                PreviousState = GameState.PHASE5;
-                phase1menu.SetActive(true);
-                break;
-            case GameState.PHASE2:
-                PreviousState = GameState.PHASE1;
-                MoveNextAndTransition(command);
-                break;
-            case GameState.PHASE3:
-                PreviousState = GameState.PHASE2;
-                MoveNextAndTransition(command);
-                break;
-            case GameState.PHASE4:
-                PreviousState = GameState.PHASE3;
-                MoveNextAndTransition(command);
-                break;
-        }
-    }
+    //public void LoadTransition(GameState state, string command)
+    //{
+    //    CurrentState = state;
+    //    switch(state)
+    //    {
+    //        case GameState.PHASE1:
+    //            PreviousState = GameState.PHASE5;
+    //            phase1menu.SetActive(true);
+    //            break;
+    //        case GameState.PHASE2:
+    //            PreviousState = GameState.PHASE1;
+    //            MoveNextAndTransition(command);
+    //            break;
+    //        case GameState.PHASE3:
+    //            PreviousState = GameState.PHASE2;
+    //            MoveNextAndTransition(command);
+    //            break;
+    //        case GameState.PHASE4:
+    //            PreviousState = GameState.PHASE3;
+    //            MoveNextAndTransition(command);
+    //            break;
+    //    }
+    //}
 
 
-    void PhaseTextTransition()
-    {
-        if (PhaseText != null)
-        {
-            switch (CurrentState)
-            {
-                case GameState.PHASE0:
-                    PhaseText.text = "Setup Phase";
-                    break;
-                case GameState.PHASE1:
-                    PhaseText.text = "Rolling Dice";
-                    break;
-                case GameState.PHASE2:
-                    PhaseText.text = "Trade";
-                    break;
-                case GameState.PHASE3:
-                    PhaseText.text = "Build";
-                    break;
-                case GameState.PHASE4:
-                    PhaseText.text = "End Turn";
-                    break;
-                case GameState.PHASE5:
-                    PhaseText.text = "Processing";
-                    break;
-                case GameState.PHASE6:
-                    PhaseText.text = "Winner is:";
-                    break;
-                default:
-                    PhaseText.text = "Current Phase Text";
-                    break;
-            }
-        }
-        else
-        {
-            //throw new UnityException("No Phase text in Engine");
-            Debug.Log("No Phase text in Engine.");
-        }
-    }
+    //void PhaseTextTransition()
+    //{
+    //    if (PhaseText != null)
+    //    {
+    //        switch (CurrentState)
+    //        {
+    //            case GameState.PHASE0:
+    //                PhaseText.text = "Setup Phase";
+    //                break;
+    //            case GameState.PHASE1:
+    //                PhaseText.text = "Rolling Dice";
+    //                break;
+    //            case GameState.PHASE2:
+    //                PhaseText.text = "Trade";
+    //                break;
+    //            case GameState.PHASE3:
+    //                PhaseText.text = "Build";
+    //                break;
+    //            case GameState.PHASE4:
+    //                PhaseText.text = "End Turn";
+    //                break;
+    //            case GameState.PHASE5:
+    //                PhaseText.text = "Processing";
+    //                break;
+    //            case GameState.PHASE6:
+    //                PhaseText.text = "Winner is:";
+    //                break;
+    //            default:
+    //                PhaseText.text = "Current Phase Text";
+    //                break;
+    //        }
+    //    }
+    //    else
+    //    {
+    //        //throw new UnityException("No Phase text in Engine");
+    //        Debug.Log("No Phase text in Engine.");
+    //    }
+    //}
 
-    GameState GetNext(StateCommands command)
-    {
-        //construct transition based on machine current state and the command
-        ScriptPhaseTransition newTransition = new ScriptPhaseTransition(CurrentState, command);
+    //GameState GetNext(StateCommands command)
+    //{
+    //    //construct transition based on machine current state and the command
+    //    ScriptPhaseTransition newTransition = new ScriptPhaseTransition(CurrentState, command);
 
-        //store the location to got to here
-        GameState newState;
+    //    //store the location to got to here
+    //    GameState newState;
 
-        if (!allTransitions.TryGetValue(newTransition, out newState))
-            throw new UnityException("Invalid Game State transition " + CurrentState + " -> " + command);
+    //    if (!allTransitions.TryGetValue(newTransition, out newState))
+    //        throw new UnityException("Invalid Game State transition " + CurrentState + " -> " + command);
 
-        //return the new state
-        return newState;
-    }
+    //    //return the new state
+    //    return newState;
+    //}
 
-    public void MoveNextAndTransition(string command)
-    {
-        //record the previous state of the machine
-        PreviousState = CurrentState;
+    //public void MoveNextAndTransition(string command)
+    //{
+    //    //record the previous state of the machine
+    //    PreviousState = CurrentState;
 
-        //location for the new command
-        StateCommands newCommand;
+    //    //location for the new command
+    //    StateCommands newCommand;
 
-        //try to get the value of the command
-        if (!enumParse.TryGetValue(command, out newCommand))
-            throw new UnityException("Invalid command  -> " + command);
+    //    //try to get the value of the command
+    //    if (!enumParse.TryGetValue(command, out newCommand))
+    //        throw new UnityException("Invalid command  -> " + command);
 
-        //setup the new state
-        CurrentState = GetNext(newCommand);
+    //    //setup the new state
+    //    CurrentState = GetNext(newCommand);
 
-        Debug.Log("Transitioning from " + PreviousState + " -> " + CurrentState);
-        //transition the game to the next state
+    //    Debug.Log("Transitioning from " + PreviousState + " -> " + CurrentState);
+    //    //transition the game to the next state
 
-        Transition();
+    //    Transition();
 
-    }
+    //}
 
 
 
-    public void Transition()
-    {
-        switch (PreviousState)
-        {
-            case GameState.PHASE0:
-                //phase0menu.SetActive(false); //Andrew Seba
-                //phase1menu.SetActive(true);
-                Phase5();
-                break;
-            case GameState.PHASE1:
-                //phase1menu.SetActive(false);
-                //phase2menu.SetActive(true);
-                tradeWindowButton.SetActive(true);
-                Phase2();
-                break;
-            case GameState.PHASE2:
-                //phase2menu.SetActive(false);
-                //phase3menu.SetActive(true);
-                tradeWindowButton.SetActive(false);
-                //Phase3();
-                break;
-            case GameState.PHASE3:
-                //phase3menu.SetActive(false);
-                BuildPhaseMenu.SetActive(true);
-                //phase4menu.SetActive(true);
-                Phase4();
-                break;
-            case GameState.PHASE4:
-                //phase4menu.SetActive(false);
-                Phase5();
-                break;
-            case GameState.PHASE5:
-                if (CurrentState == GameState.PHASE1)
-                {
-                    //phase1menu.SetActive(true);
-                    Phase1();
-                }
-                else
-                {
-                    Phase6(winningPlayerNumber);
-                }
-                break;
-        }
-    }
+    //public void Transition()
+    //{
+    //    switch (PreviousState)
+    //    {
+    //        case GameState.PHASE0:
+    //            //phase0menu.SetActive(false); //Andrew Seba
+    //            //phase1menu.SetActive(true);
+    //            Phase5();
+    //            break;
+    //        case GameState.PHASE1:
+    //            //phase1menu.SetActive(false);
+    //            //phase2menu.SetActive(true);
+    //            tradeWindowButton.SetActive(true);
+    //            Phase2();
+    //            break;
+    //        case GameState.PHASE2:
+    //            //phase2menu.SetActive(false);
+    //            //phase3menu.SetActive(true);
+    //            tradeWindowButton.SetActive(false);
+    //            //Phase3();
+    //            break;
+    //        case GameState.PHASE3:
+    //            //phase3menu.SetActive(false);
+    //            BuildPhaseMenu.SetActive(true);
+    //            //phase4menu.SetActive(true);
+    //            Phase4();
+    //            break;
+    //        case GameState.PHASE4:
+    //            //phase4menu.SetActive(false);
+    //            Phase5();
+    //            break;
+    //        case GameState.PHASE5:
+    //            if (CurrentState == GameState.PHASE1)
+    //            {
+    //                //phase1menu.SetActive(true);
+    //                Phase1();
+    //            }
+    //            else
+    //            {
+    //                Phase6(winningPlayerNumber);
+    //            }
+    //            break;
+    //    }
+    //}
     #endregion
 
     #region Phase 0
@@ -396,174 +396,174 @@ public class ScriptEngine : MonoBehaviour
     //}
 
     #region Phase 1
-    void Phase1()
-    {
-        Debug.Log("Entering Phase 1");
-        PhaseTextTransition();
-        //ResourcesText();
-        int diceRoll = Random.Range(1, 6);
-        Debug.Log("Dice Roll " + diceRoll);
-        Debug.Log("Checking Settlements");
-        players[0].GainResources(diceRoll);
-    }
+    //void Phase1()
+    //{
+    //    Debug.Log("Entering Phase 1");
+    //    PhaseTextTransition();
+    //    //ResourcesText();
+    //    int diceRoll = Random.Range(1, 6);
+    //    Debug.Log("Dice Roll " + diceRoll);
+    //    Debug.Log("Checking Settlements");
+    //    players[0].GainResources(diceRoll);
+    //}
     #endregion
 
     #region Phase 2
-    void Phase2()
-    {
-        Debug.Log("Entered Phase 2");
-        PhaseTextTransition();
-    }
+    //void Phase2()
+    //{
+    //    Debug.Log("Entered Phase 2");
+    //    PhaseTextTransition();
+    //}
     #endregion
 
     #region Phase 3
 
 
-    public void ActivateBuilding(string command)
-    {
-        switch(command)
-        {
-            case "buildRoad":
-                StartCoroutine("BuyRoad");
-                break;
-            case "buildSettlement":
-                StartCoroutine("BuySettlement");
-                break;
-        }
-    }
+    //public void ActivateBuilding(string command)
+    //{
+    //    switch(command)
+    //    {
+    //        case "buildRoad":
+    //            StartCoroutine("BuyRoad");
+    //            break;
+    //        case "buildSettlement":
+    //            StartCoroutine("BuySettlement");
+    //            break;
+    //    }
+    //}
 
-    void DisplaySettlementButton()
-    {
-        if (players[0].brick >= 1 && players[0].wood >= 1 && players[0].grain >= 1 && players[0].wool >= 1)
-        {
-            BuildSettlementButton.GetComponent<Button>().interactable = true;
-        }
-        else//andrew Seba
-        {
-            BuildSettlementButton.GetComponent<Button>().interactable = false;
-        }
-    }
+    //void DisplaySettlementButton()
+    //{
+    //    if (players[0].brick >= 1 && players[0].wood >= 1 && players[0].grain >= 1 && players[0].wool >= 1)
+    //    {
+    //        BuildSettlementButton.GetComponent<Button>().interactable = true;
+    //    }
+    //    else//andrew Seba
+    //    {
+    //        BuildSettlementButton.GetComponent<Button>().interactable = false;
+    //    }
+    //}
 
-    IEnumerator BuySettlement()
-    {
-        while (true)
-        {
+    //IEnumerator BuySettlement()
+    //{
+    //    while (true)
+    //    {
 
-            //Andrew Seba
-            foreach (GameObject settlement in allEmptySettlements)
-            {
-                settlement.GetComponent<Renderer>().material.color = Color.clear;
-            }
+    //        //Andrew Seba
+    //        foreach (GameObject settlement in allEmptySettlements)
+    //        {
+    //            settlement.GetComponent<Renderer>().material.color = Color.clear;
+    //        }
 
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
-            {
-                if (hit.transform.tag == "Settlement")
-                {
+    //        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    //        RaycastHit hit;
+    //        if (Physics.Raycast(ray, out hit))
+    //        {
+    //            if (hit.transform.tag == "Settlement")
+    //            {
 
-                    hit.collider.gameObject.GetComponent<Renderer>().material.color = Color.yellow;
+    //                hit.collider.gameObject.GetComponent<Renderer>().material.color = Color.yellow;
 
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        if (hit.transform.GetComponent<ScriptBoardCorner>().CheckValidBuild(this.gameObject))
-                        {
-                            Debug.Log("Valid Settlement Placement");
-                            players[0].ChangeBrick(-1);
-                            players[0].ChangeWood(-1);
-                            players[0].ChangeGrain(-1);
-                            players[0].ChangeWool(-1);
+    //                if (Input.GetMouseButtonDown(0))
+    //                {
+    //                    if (hit.transform.GetComponent<ScriptBoardCorner>().CheckValidBuild(this.gameObject))
+    //                    {
+    //                        Debug.Log("Valid Settlement Placement");
+    //                        players[0].ChangeBrick(-1);
+    //                        players[0].ChangeWood(-1);
+    //                        players[0].ChangeGrain(-1);
+    //                        players[0].ChangeWool(-1);
 
-                            DisplayRoadButton();
-                            DisplaySettlementButton();
+    //                        DisplayRoadButton();
+    //                        DisplaySettlementButton();
 
-                            //Add to player and remove from empty list //andrew seba
-                            hit.transform.GetComponent<ScriptBoardCorner>().owner = players[0];
-                            players[0].settlements.Add(hit.transform.gameObject);//Andrew Seba
-                            allEmptySettlements.Remove(hit.collider.gameObject);
+    //                        //Add to player and remove from empty list //andrew seba
+    //                        hit.transform.GetComponent<ScriptBoardCorner>().owner = players[0];
+    //                        players[0].settlements.Add(hit.transform.gameObject);//Andrew Seba
+    //                        allEmptySettlements.Remove(hit.collider.gameObject);
 
-                            break;
-                        }
-                        else
-                        {
-                            Debug.Log("Invalid Settlement Placement");
-                            //break;
-                        }
-                    }
-                }
-            }
-            yield return null;
-        }
+    //                        break;
+    //                    }
+    //                    else
+    //                    {
+    //                        Debug.Log("Invalid Settlement Placement");
+    //                        //break;
+    //                    }
+    //                }
+    //            }
+    //        }
+    //        yield return null;
+    //    }
             
         
-    }
-
-    void DisplayRoadButton()
-    {
-        if (players[0].brick >= 1 && players[0].wood >= 1)
-        {
-            BuildRoadButton.GetComponent<Button>().interactable = true;
-        }
-        else//Andrew Seba
-        {
-            BuildRoadButton.GetComponent<Button>().interactable = false;
-        }
-    }
-
-    IEnumerator BuyRoad()
-    {
-        while (true)
-        {
-
-            foreach (GameObject road in allEmptyRoads)
-            {
-                road.GetComponent<Renderer>().material.color = Color.clear;
-            }
-
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
-            {
-                if (hit.transform.tag == "Road")
-                {
-                    GameObject selectedRoad = hit.collider.gameObject;
-                    selectedRoad.GetComponent<Renderer>().material.color = Color.yellow;
-
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        if (selectedRoad.GetComponent<ScriptBoardEdge>().CheckValidBuild(this.gameObject))
-                        {
-                            Debug.Log("Valid Road Placement");
-                            players[0].ChangeBrick(-1);
-                            players[0].ChangeWood(-1);
-                            DisplayRoadButton();
-                            DisplaySettlementButton();
-
-                            //Andrew Seba
-                            selectedRoad.GetComponent<ScriptBoardEdge>().owner = players[0];
-                            players[0].roads.Add(hit.transform.gameObject);
-                            allEmptyRoads.Remove(selectedRoad);
-                            //end Andrew Seba
-                            break;
-                        }
-                        else
-                        {
-                            Debug.Log("Invalid Road Placement");
-                            //break;
-                        }
-                    }
-                }
-            }
-            yield return null;
-        }
-
-
-    }
-
-    //public void NextPhase()
-    //{
-    //    MoveNextAndTransition("goto phase 4");
     //}
+
+    //void DisplayRoadButton()
+    //{
+    //    if (players[0].brick >= 1 && players[0].wood >= 1)
+    //    {
+    //        BuildRoadButton.GetComponent<Button>().interactable = true;
+    //    }
+    //    else//Andrew Seba
+    //    {
+    //        BuildRoadButton.GetComponent<Button>().interactable = false;
+    //    }
+    //}
+
+    //IEnumerator BuyRoad()
+    //{
+    //    while (true)
+    //    {
+
+    //        foreach (GameObject road in allEmptyRoads)
+    //        {
+    //            road.GetComponent<Renderer>().material.color = Color.clear;
+    //        }
+
+    //        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    //        RaycastHit hit;
+    //        if (Physics.Raycast(ray, out hit))
+    //        {
+    //            if (hit.transform.tag == "Road")
+    //            {
+    //                GameObject selectedRoad = hit.collider.gameObject;
+    //                selectedRoad.GetComponent<Renderer>().material.color = Color.yellow;
+
+    //                if (Input.GetMouseButtonDown(0))
+    //                {
+    //                    if (selectedRoad.GetComponent<ScriptBoardEdge>().CheckValidBuild(this.gameObject))
+    //                    {
+    //                        Debug.Log("Valid Road Placement");
+    //                        players[0].ChangeBrick(-1);
+    //                        players[0].ChangeWood(-1);
+    //                        DisplayRoadButton();
+    //                        DisplaySettlementButton();
+
+    //                        //Andrew Seba
+    //                        selectedRoad.GetComponent<ScriptBoardEdge>().owner = players[0];
+    //                        players[0].roads.Add(hit.transform.gameObject);
+    //                        allEmptyRoads.Remove(selectedRoad);
+    //                        //end Andrew Seba
+    //                        break;
+    //                    }
+    //                    else
+    //                    {
+    //                        Debug.Log("Invalid Road Placement");
+    //                        //break;
+    //                    }
+    //                }
+    //            }
+    //        }
+    //        yield return null;
+    //    }
+
+
+    //}
+
+    ////public void NextPhase()
+    ////{
+    ////    MoveNextAndTransition("goto phase 4");
+    ////}
 
     #endregion
 
@@ -572,124 +572,124 @@ public class ScriptEngine : MonoBehaviour
         //Split phase 4
         //something something
     #region Phase 4
-    void Phase4()
-    {
-        Debug.Log("Entering Phase 4");
-        PhaseTextTransition();
-        //ResourcesText();
-        StartCoroutine("CheckForEndTurn");
+    //void Phase4()
+    //{
+    //    Debug.Log("Entering Phase 4");
+    //    PhaseTextTransition();
+    //    //ResourcesText();
+    //    StartCoroutine("CheckForEndTurn");
 
 
-    }
+    //}
 
-    //Split this to the game manager
-    IEnumerator CheckForEndTurn()
-    {
-        bool endTurn;
-        while (true)
-        {
-            endTurn = true;
-            foreach (ScriptPlayer player in players)
-            {
-                if (endTurn == true && player.endTurn == false)
-                {
-                    endTurn = false;
-                }
-            }
-            if (endTurn)
-            {
-                break;
-            }
-            yield return null;
-        }
-        if (endTurn)
-        {
-            Debug.Log(players.Count);
-            for (int i = 0; i < players.Count; i++)
-            {
-                players[i].endTurn = false;
-            }
+    ////Split this to the game manager
+    //IEnumerator CheckForEndTurn()
+    //{
+    //    bool endTurn;
+    //    while (true)
+    //    {
+    //        endTurn = true;
+    //        foreach (ScriptPlayer player in players)
+    //        {
+    //            if (endTurn == true && player.endTurn == false)
+    //            {
+    //                endTurn = false;
+    //            }
+    //        }
+    //        if (endTurn)
+    //        {
+    //            break;
+    //        }
+    //        yield return null;
+    //    }
+    //    if (endTurn)
+    //    {
+    //        Debug.Log(players.Count);
+    //        for (int i = 0; i < players.Count; i++)
+    //        {
+    //            players[i].endTurn = false;
+    //        }
 
-            MoveNextAndTransition("goto phase 5");
-            yield break;
-        }
-        yield return null;
+    //        MoveNextAndTransition("goto phase 5");
+    //        yield break;
+    //    }
+    //    yield return null;
 
-    }
+    //}
 
-    public void ReturnToTrade()
-    {
-        StopCoroutine("CheckForEndTurn");
-        players[0].endTurn = false;
-        MoveNextAndTransition("goto phase 2");
-    }
+    //public void ReturnToTrade()
+    //{
+    //    StopCoroutine("CheckForEndTurn");
+    //    players[0].endTurn = false;
+    //    MoveNextAndTransition("goto phase 2");
+    //}
 
-    public void ReturnToBuild()
-    {
-        StopCoroutine("CheckForEndTurn");
-        players[0].endTurn = false;
-        MoveNextAndTransition("goto phase 3");
-    }
+    //public void ReturnToBuild()
+    //{
+    //    StopCoroutine("CheckForEndTurn");
+    //    players[0].endTurn = false;
+    //    MoveNextAndTransition("goto phase 3");
+    //}
 
-    public void EndTurn()
-    {
-        players[0].endTurn = true;
-    }
+    //public void EndTurn()
+    //{
+    //    players[0].endTurn = true;
+    //}
     #endregion
     
 
     //Processing
     #region Phase 5
-    void Phase5()
-    {
-        Debug.Log("Entering Phase 5");
+    //void Phase5()
+    //{
+    //    Debug.Log("Entering Phase 5");
 
-        //Cmd
-        PhaseTextTransition();
+    //    //Cmd
+    //    PhaseTextTransition();
 
-        CheckForWinner();
-    }
+    //    CheckForWinner();
+    //}
 
 
-    void CheckForWinner()
-    {
-        Debug.Log("Checking for winner");
+    //void CheckForWinner()
+    //{
+    //    Debug.Log("Checking for winner");
 
-        Debug.Log("Start Processing");
-        for (int i = 0; i < players.Count; i++)
-        {
-            if (players[i].numSettlements > 1.25 * players.Count)
-            {
-                winningPlayerNumber = i;
-            }
-        }
+    //    Debug.Log("Start Processing");
+    //    for (int i = 0; i < players.Count; i++)
+    //    {
+    //        if (players[i].numSettlements > 1.25 * players.Count)
+    //        {
+    //            winningPlayerNumber = i;
+    //        }
+    //    }
 
-        if (winningPlayerNumber != -1)
-        {
-            Debug.Log("End Processing");
-            Debug.Log("Winner found");
-            MoveNextAndTransition("goto phase 6");
-        }
-        else
-        {
-            Debug.Log("End Processing");
-            Debug.Log("No winner");
-            MoveNextAndTransition("goto phase 1");
-        }
-    }
+    //    if (winningPlayerNumber != -1)
+    //    {
+    //        Debug.Log("End Processing");
+    //        Debug.Log("Winner found");
+    //        MoveNextAndTransition("goto phase 6");
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("End Processing");
+    //        Debug.Log("No winner");
+    //        MoveNextAndTransition("goto phase 1");
+    //    }
+    //}
     #endregion
 
     #region Phase 6
-    void Phase6(int player)
-    {
-        Debug.Log("Entering Phase 6 (End Game)");
-        WinnerText.text = ("Winner: " + players[player].playerName);
-    }
+    //void Phase6(int player)
+    //{
+    //    Debug.Log("Entering Phase 6 (End Game)");
+    //    WinnerText.text = ("Winner: " + players[player].playerName);
+    //}
 
-    public void QuitApplication()
-    {
-        Application.Quit();
-    }
+    //public void QuitApplication()
+    //{
+    //    Application.Quit();
+    //}
     #endregion
 
     /// <summary>
@@ -697,29 +697,29 @@ public class ScriptEngine : MonoBehaviour
     /// @Description: Takes the current phase and calls the transition engine.
     /// Button should only be available if done with phase.
     /// </summary>
-    public void _NextPhaseButton()
-    {
-        switch (CurrentState)
-        {
-            case GameState.PHASE0:
-                MoveNextAndTransition("goto phase 5");
-                break;
-            case GameState.PHASE1:
-                MoveNextAndTransition("goto phase 2");
-                break;
-            case GameState.PHASE2:
-                MoveNextAndTransition("goto phase 3");
-                break;
-            case GameState.PHASE3:
-                MoveNextAndTransition("goto phase 4");
-                break;
-            case GameState.PHASE4:
-                break;
-            case GameState.PHASE5:
-                break;
+    //public void _NextPhaseButton()
+    //{
+    //    switch (CurrentState)
+    //    {
+    //        case GameState.PHASE0:
+    //            MoveNextAndTransition("goto phase 5");
+    //            break;
+    //        case GameState.PHASE1:
+    //            MoveNextAndTransition("goto phase 2");
+    //            break;
+    //        case GameState.PHASE2:
+    //            MoveNextAndTransition("goto phase 3");
+    //            break;
+    //        case GameState.PHASE3:
+    //            MoveNextAndTransition("goto phase 4");
+    //            break;
+    //        case GameState.PHASE4:
+    //            break;
+    //        case GameState.PHASE5:
+    //            break;
 
-        }
-    }
+    //    }
+    //}
 }
 
 
