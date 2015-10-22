@@ -10,7 +10,7 @@ using System.Collections.Generic;
 public class ScriptGameManager : MonoBehaviour
 {
 
-    List<ScriptPlayer> players = new List<ScriptPlayer>();
+    public List<ScriptPlayer> players = new List<ScriptPlayer>();
 
     public GameObject startGameMenu;
 
