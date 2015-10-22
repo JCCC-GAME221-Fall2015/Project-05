@@ -1,10 +1,16 @@
 fileFormatVersion: 2
 guid: 16d4eca46716f564b9bdb96ab4f0871f
-timeCreated: 1444241416
-licenseType: Pro
+timeCreated: 1445471592
+licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - cornerPrefab: {instanceID: 0}
+  - edgePrefab: {instanceID: 0}
+  - woodHexSprite: {fileID: 21300000, guid: 2a9f219ea4fbb9a41aca2635a6adde2b, type: 3}
+  - woolHexSprite: {fileID: 21300000, guid: 82e079f710f64844d83a9aca36d1a4b8, type: 3}
+  - grainHexSprite: {fileID: 21300000, guid: 2293663c6737fad49b6ac72877f01719, type: 3}
+  - brickHexSprite: {fileID: 21300000, guid: fb0441c72adbfc648ac63c1e2567f9a3, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

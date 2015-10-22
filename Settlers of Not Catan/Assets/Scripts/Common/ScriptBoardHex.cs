@@ -31,7 +31,12 @@ public class ScriptBoardHex : MonoBehaviour
     public float hexSideLength;
     public int hexDieValue;
     public HexType resource;
+    public Sprite woodHexSprite;
+    public Sprite woolHexSprite;
+    public Sprite grainHexSprite;
+    public Sprite brickHexSprite;
 
+    bool spriteSet = false;
 
     void Start()
     {
@@ -39,6 +44,30 @@ public class ScriptBoardHex : MonoBehaviour
         CheckAndGenerateEdges();
         ScriptSaveLoad saveScript = GameObject.Find("GameEngine").GetComponent<ScriptSaveLoad>();
         saveScript.hexes.Add(this);
+    }
+
+    void Update()
+    {
+        if (!spriteSet)
+        {
+            SpriteRenderer sr = this.gameObject.GetComponent<SpriteRenderer>();
+            switch(resource)
+            {
+                case HexType.WOOD:
+                sr.sprite = woodHexSprite;
+                break;
+                case HexType.WOOL:
+                sr.sprite = woolHexSprite;
+                break;
+                case HexType.GRAIN:
+                sr.sprite = grainHexSprite;
+                break;
+                case HexType.BRICK:
+                sr.sprite = brickHexSprite;
+                break;
+            }
+            spriteSet = true;
+        }
     }
 
     public void CheckAndGenerateEdges()

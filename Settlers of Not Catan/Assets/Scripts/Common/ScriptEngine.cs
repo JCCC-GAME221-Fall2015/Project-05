@@ -64,6 +64,7 @@ public class ScriptEngine : MonoBehaviour
 
     #region Phase 2 variables
     public GameObject phase2menu; // the phase 2 menu
+    public GameObject tradeMenu; // the trade menu
     #endregion
 
     #region Phase 3 variables
@@ -400,6 +401,38 @@ public class ScriptEngine : MonoBehaviour
         PhaseTextTransition();
         ResourcesText();
         //MoveNextAndTransition("goto phase 3");
+    }
+
+    // @Author Marshall Mason
+    public void _OpenTradeInterface()
+    {
+        //Activate Trade Menu
+        tradeMenu.SetActive(true);
+        //Select Trade Partner (Insert networking reference here)
+
+        // if (tradePartner == "Bank")
+            //bankTradeButton.SetActive(true);
+        // else playerTradeButton.SetActive(true);
+    }
+
+    // @Author Marshall Mason
+    public void _PlayerTradeConfirm()
+    {
+        //if (tradePartner != null)
+            //if outgoing amounts are all less than current stocks
+                //Send trade to other player
+                //Receive confirmation from other player regarding accept/reject of trade
+                //if trade is accepted, adjust stocks
+    }
+
+    // @Author Marshall Mason
+    public void _BankTradeConfirm()
+    {
+        //cap outgoing amounts to current stocks
+        //disallow incoming resources that match outgoing resources
+        //cap incoming amounts to 1/2 outgoing amounts
+        //if all that is met, confirm trade dialog
+        //else error dialog telling player why trade not allowed
     }
     #endregion
 
