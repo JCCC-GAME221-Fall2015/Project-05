@@ -124,7 +124,7 @@ public class InformationSave : MonoBehaviour {
 		}
 		writer.Close();
     }
-
+	
 	/* New SaveFile Looks like
 	Starts with a Player line:
 		PN=Craig#LN=CraigsGame#CP=GAMESTART#WD=0#WL=0#BR=0#GR=0#
@@ -135,7 +135,7 @@ public class InformationSave : MonoBehaviour {
 	Those are followed by Settlement lines in the map (probably owned by the Player):
 		SN=Settlement#SP=(-0.5, -0.3, 0.0)#SR=(0.7, 0.0, 0.0, 0.7)#SO=None#
     */
-
+	
 	public void SaveGame2() // Craig
 	{
 		string outputString;
@@ -143,21 +143,21 @@ public class InformationSave : MonoBehaviour {
 		GameObject[] hexes;
 		GameObject[] roads;
 		GameObject[] settlements;
-
+		
 		StreamWriter writer = null;
 		using (writer = new StreamWriter(txtInfoLocation + outputFile))
 		{
 			outputString = "PN=" + userName.ToString() +
 				"#LN=" + levelName.ToString() +
-				"#CP=" + playerData.CurrentState.ToString() +
-				"#WD=" + playerData.wood.ToString() +
-				"#WL=" + playerData.wool.ToString() +
-				"#BR=" + playerData.brick.ToString() +
-				"#GR=" + playerData.grain.ToString() + "#";
+					"#CP=" + playerData.CurrentState.ToString() +
+					"#WD=" + playerData.wood.ToString() +
+					"#WL=" + playerData.wool.ToString() +
+					"#BR=" + playerData.brick.ToString() +
+					"#GR=" + playerData.grain.ToString() + "#";
 			writer.WriteLine(outputString);
-
+			
 			hexes = GameObject.FindGameObjectsWithTag("Hex");
-
+			
 			for (int i = 0; i < hexes.Length; i++)
 			{
 				outputString = "HN=" + hexes[i].name.ToString() +
@@ -169,7 +169,7 @@ public class InformationSave : MonoBehaviour {
 			}
 			
 			roads = GameObject.FindGameObjectsWithTag("Road");
-
+			
 			for (int i = 0; i < roads.Length; i++)
 			{
 				if (roads[i].GetComponent<ScriptBoardEdge>().owner == null)
@@ -189,7 +189,7 @@ public class InformationSave : MonoBehaviour {
 			}
 			
 			settlements = GameObject.FindGameObjectsWithTag("Settlement");
-
+			
 			for (int i = 0; i < settlements.Length; i++)
 			{
 				if (settlements[i].GetComponent<ScriptBoardCorner>().owner == null)
@@ -209,13 +209,111 @@ public class InformationSave : MonoBehaviour {
 				}
 				writer.WriteLine(outputString);
 			}
-
+			
 			//write actions
-//			foreach(string action in playerData.playerActions)
-//			{
-//				writer.WriteLine(action);
-//			}
+			//			foreach(string action in playerData.playerActions)
+			//			{
+			//				writer.WriteLine(action);
+			//			}
 		}
 		writer.Close();
 	} // end method SaveGame2
+	
+	/* New SaveFile Looks like
+	Starts with a Player line:
+		PN=Craig#LN=CraigsGame#CP=GAMESTART#WD=0#WL=0#BR=0#GR=0#
+	That's followed by one line for every Hex in the map:
+		HN=Hex (4)#HP=(0.0, -1.0, 0.0)#DN=0#RT=3#
+	Those are followed by Road lines in the map (probably owned by the Player):
+		RN=Road#RP=(0.4, -1.2, 0.0)#RO=None#
+	Those are followed by Settlement lines in the map (probably owned by the Player):
+		SN=Settlement#SP=(-0.5, -0.3, 0.0)#SR=(0.7, 0.0, 0.0, 0.7)#SO=None#
+    */
+	
+	public void SaveGame3() // Craig
+	{
+		string outputString;
+		ScriptGameManager gameManagerScript = GameObject.Find("Game Manager").GetComponent<ScriptGameManager>();
+//		List<ScriptPlayer> playersData = new List<ScriptPlayer>();
+		GameObject[] hexes;
+		GameObject[] roads;
+		GameObject[] settlements;
+
+		StreamWriter writer = null;
+		using (writer = new StreamWriter(txtInfoLocation + outputFile))
+		{
+			foreach(ScriptPlayer player in gameManagerScript.players)
+	        {
+				outputString = "PN=" + player.playerName.ToString() +
+					"#LN=" + player.playerName.ToString() +
+					"#CP=" + player.CurrentState.ToString() +
+					"#WD=" + player.wood.ToString() +
+					"#WL=" + player.wool.ToString() +
+					"#BR=" + player.brick.ToString() +
+					"#GR=" + player.grain.ToString() + "#";
+				writer.WriteLine(outputString);
+        	}
+
+			hexes = GameObject.FindGameObjectsWithTag("Hex");
+			
+			for (int i = 0; i < hexes.Length; i++)
+			{
+				outputString = "HN=" + hexes[i].name.ToString() +
+					"#HP=" + hexes[i].transform.position.ToString() +
+						"#DN=" + hexes[i].GetComponent<ScriptBoardHex>().hexDieValue.ToString() +
+						"#RT=" + ((int)(hexes[i].GetComponent<ScriptBoardHex>().resource)).ToString() +
+						"#";
+				writer.WriteLine(outputString);
+			}
+			
+			roads = GameObject.FindGameObjectsWithTag("Road");
+			
+			for (int i = 0; i < roads.Length; i++)
+			{
+				if (roads[i].GetComponent<ScriptBoardEdge>().owner == null)
+				{
+					outputString = "RN=" + roads[i].name.ToString() +
+						"#RP=" + roads[i].transform.position.ToString() +
+							"#RO=None#";
+				}
+				else
+				{
+					outputString = "RN=" + roads[i].name.ToString() +
+						"#RP=" + roads[i].transform.position.ToString() +
+							"#RO=" + roads[i].GetComponent<ScriptBoardEdge>().owner.playerName.ToString() +
+							"#";
+				}
+				writer.WriteLine(outputString);
+			}
+			
+			settlements = GameObject.FindGameObjectsWithTag("Settlement");
+			
+			for (int i = 0; i < settlements.Length; i++)
+			{
+				if (settlements[i].GetComponent<ScriptBoardCorner>().owner == null)
+				{
+					outputString = "SN=" + settlements[i].name.ToString() +
+						"#SP=" + settlements[i].transform.position.ToString() +
+							"#SR=" + settlements[i].transform.rotation.ToString() +
+							"#SO=None#";
+				}
+				else
+				{
+					outputString = "SN=" + settlements[i].name.ToString() +
+						"#SP=" + settlements[i].transform.position.ToString() +
+							"#SR=" + settlements[i].transform.rotation.ToString() +
+							"#SO=" + settlements[i].GetComponent<ScriptBoardCorner>().owner.playerName.ToString() +
+							"#";
+				}
+				writer.WriteLine(outputString);
+			}
+			
+			//write actions
+			//			foreach(string action in playerData.playerActions)
+			//			{
+			//				writer.WriteLine(action);
+			//			}
+		}
+		writer.Close();
+	} // end method SaveGame3
 }

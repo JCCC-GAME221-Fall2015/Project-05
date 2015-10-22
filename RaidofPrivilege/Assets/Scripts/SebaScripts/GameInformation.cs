@@ -30,6 +30,7 @@ public class GameInformation : MonoBehaviour {
 	public void _SaveGame()
 	{
 		saveInfo.SaveGame2(); // Craig
+//		saveInfo.SaveGame3(); // Craig
 //		saveInfo.SaveGame();
 
 	}
