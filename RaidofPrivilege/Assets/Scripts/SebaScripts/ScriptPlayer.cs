@@ -94,51 +94,45 @@ public class ScriptPlayer : NetworkBehaviour {
         settlements = new List<GameObject>();
         roads = new List<GameObject>();
 
-        transform.parent = GameObject.Find("Player").transform;
-
-        if (isLocalPlayer)
+        try
         {
-            try
-            {
-                BuildPhaseMenu = GameObject.Find("Panel_BuildMenu");
+            BuildPhaseMenu = GameObject.Find("Panel_BuildMenu");
 
 
-                if (BuildPhaseMenu != null) {
-                    BuildSettlementButton = GameObject.Find("Button_BuildRoad");
-                    BuildRoadButton = GameObject.Find("Button_BuildSettlement");
+            if (BuildPhaseMenu != null) {
+                BuildSettlementButton = GameObject.Find("Button_BuildRoad");
+                BuildRoadButton = GameObject.Find("Button_BuildSettlement");
                     
-                    BuildPhaseMenu.SetActive(false);
-                }
-                else
-                {
-                    Debug.Log("Panel_BuildMenu can't be found. Please re-enable in scene before running.");
-                }
+                BuildPhaseMenu.SetActive(false);
+            }
+            else
+            {
+                Debug.Log("Panel_BuildMenu can't be found. Please re-enable in scene before running.");
+            }
 
-                tradeWindowButton = GameObject.Find("Button_OpenTradeWindow");
+            tradeWindowButton = GameObject.Find("Button_OpenTradeWindow");
 
-                if(tradeWindowButton != null)
-                {
-                    tradeWindowButton.SetActive(false);
-                }
-                else
-                {
-                    Debug.LogError("Button_OpenTradeWindow can't be found. Please re-enable in hierarchy before running.");
-                }
+            if(tradeWindowButton != null)
+            {
+                tradeWindowButton.SetActive(false);
+            }
+            else
+            {
+                Debug.LogError("Button_OpenTradeWindow can't be found. Please re-enable in hierarchy before running.");
+            }
                 
 
 
 
-                PhaseText = GameObject.Find("Text_CurPhase").GetComponent<Text>();
-                grainAmount = GameObject.Find("Text_GrainAmount").GetComponent<Text>();
-                brickAmount = GameObject.Find("Text_BrickAmount").GetComponent<Text>();
-                woodAmount = GameObject.Find("Text_WoodAmount").GetComponent<Text>();
-                woolAmount = GameObject.Find("Text_WoolAmount").GetComponent<Text>();
-            }
-            catch
-            {
-                Debug.Log("no gui object found in scene.");
-            }
-
+            PhaseText = GameObject.Find("Text_CurPhase").GetComponent<Text>();
+            grainAmount = GameObject.Find("Text_GrainAmount").GetComponent<Text>();
+            brickAmount = GameObject.Find("Text_BrickAmount").GetComponent<Text>();
+            woodAmount = GameObject.Find("Text_WoodAmount").GetComponent<Text>();
+            woolAmount = GameObject.Find("Text_WoolAmount").GetComponent<Text>();
+        }
+        catch
+        {
+            Debug.Log("no gui object found in scene.");
         }
 
         CurrentState = GameState.PHASE0;
@@ -472,7 +466,7 @@ public class ScriptPlayer : NetworkBehaviour {
             {
                 if (hit.transform.tag == "Settlement")
                 {
-                    if(hit.transform.GetComponent<ScriptBoardCorner>().owner = null)
+                    if(hit.transform.GetComponent<ScriptBoardCorner>().owner == null)
                     {
                         hit.collider.gameObject.GetComponent<Renderer>().material.color = Color.yellow;
 

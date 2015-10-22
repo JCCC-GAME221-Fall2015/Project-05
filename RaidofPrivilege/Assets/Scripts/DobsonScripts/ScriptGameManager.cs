@@ -40,26 +40,30 @@ public class ScriptGameManager : MonoBehaviour
     {
         bool endTurn;
         endTurn = true;
-        foreach (ScriptPlayer player in players)
+        if(players.Count > 1)
         {
-            if (endTurn == true && player.endTurn == false)
+            foreach (ScriptPlayer player in players)
             {
-                endTurn = false;
+                if (endTurn == true && player.endTurn == false)
+                {
+                    endTurn = false;
+                }
+
+            }
+
+            if (endTurn)
+            {
+                CheckForWinner();
+                for (int i = 0; i < players.Count; i++)
+                {
+                    players[i].endTurn = false;
+                    players[i].MoveNextAndTransition("goto phase 5");
+                }
+
             }
         }
 
 
-        if (endTurn)
-        {
-            Debug.Log(players.Count);
-            CheckForWinner();
-            for (int i = 0; i < players.Count; i++)
-            {
-                players[i].endTurn = false;
-                players[i].MoveNextAndTransition("goto phase 5");
-            }
-
-        }
     }
 
     void CheckForWinner()
@@ -93,5 +97,10 @@ public class ScriptGameManager : MonoBehaviour
                 player.MoveNextAndTransition("goto phase 1");
             }
         }
+    }
+
+    public void _PlayerNextPhase()
+    {
+        
     }
 }
