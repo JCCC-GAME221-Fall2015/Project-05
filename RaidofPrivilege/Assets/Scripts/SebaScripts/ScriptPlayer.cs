@@ -1,14 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using UnityEngine.Networking;
 using System.Collections;
 
 /// <summary>
 /// @Author: Andrew Seba
 /// @Description: Holds all resource data and player actions.
 /// </summary>
-public class ScriptPlayer : NetworkBehaviour {
+public class ScriptPlayer : MonoBehaviour {
 
     Dictionary<ScriptPhaseTransition, GameState> allTransitions; //a dictionary of phase transitions
     Dictionary<string, StateCommands> enumParse;
@@ -57,6 +56,7 @@ public class ScriptPlayer : NetworkBehaviour {
     [HideInInspector]
     public List<string> playerActions;
 
+
     void Start()
     {
         wood = 0;
@@ -68,52 +68,49 @@ public class ScriptPlayer : NetworkBehaviour {
         settlements = new List<GameObject>();
         roads = new List<GameObject>();
 
-        transform.parent = GameObject.Find("Player").transform;
+        //transform.parent = GameObject.Find("Player").transform;
 
-        if (isLocalPlayer)
+        try
         {
-            try
-            {
-                BuildPhaseMenu = GameObject.Find("Panel_BuildMenu");
+            BuildPhaseMenu = GameObject.Find("Panel_BuildMenu");
 
 
-                if (BuildPhaseMenu != null) {
-                    BuildSettlementButton = GameObject.Find("Button_BuildRoad");
-                    BuildRoadButton = GameObject.Find("Button_BuildSettlement");
+            if (BuildPhaseMenu != null) {
+                BuildSettlementButton = GameObject.Find("Button_BuildRoad");
+                BuildRoadButton = GameObject.Find("Button_BuildSettlement");
                     
-                    BuildPhaseMenu.SetActive(false);
-                }
-                else
-                {
-                    Debug.Log("Panel_BuildMenu can't be found. Please re-enable in scene before running.");
-                }
+                BuildPhaseMenu.SetActive(false);
+            }
+            else
+            {
+                Debug.Log("Panel_BuildMenu can't be found. Please re-enable in scene before running.");
+            }
 
-                tradeWindowButton = GameObject.Find("Button_OpenTradeWindow");
+            tradeWindowButton = GameObject.Find("Button_OpenTradeWindow");
 
-                if(tradeWindowButton != null)
-                {
-                    tradeWindowButton.SetActive(false);
-                }
-                else
-                {
-                    Debug.LogError("Button_OpenTradeWindow can't be found. Please re-enable in hierarchy before running.");
-                }
+            if(tradeWindowButton != null)
+            {
+                tradeWindowButton.SetActive(false);
+            }
+            else
+            {
+                Debug.LogError("Button_OpenTradeWindow can't be found. Please re-enable in hierarchy before running.");
+            }
                 
 
 
 
-                PhaseText = GameObject.Find("Text_CurPhase").GetComponent<Text>();
-                grainAmount = GameObject.Find("Text_GrainAmount").GetComponent<Text>();
-                brickAmount = GameObject.Find("Text_BrickAmount").GetComponent<Text>();
-                woodAmount = GameObject.Find("Text_WoodAmount").GetComponent<Text>();
-                woolAmount = GameObject.Find("Text_WoolAmount").GetComponent<Text>();
-            }
-            catch
-            {
-                Debug.Log("no gui object found in scene.");
-            }
-
+            PhaseText = GameObject.Find("Text_CurPhase").GetComponent<Text>();
+            grainAmount = GameObject.Find("Text_GrainAmount").GetComponent<Text>();
+            brickAmount = GameObject.Find("Text_BrickAmount").GetComponent<Text>();
+            woodAmount = GameObject.Find("Text_WoodAmount").GetComponent<Text>();
+            woolAmount = GameObject.Find("Text_WoolAmount").GetComponent<Text>();
         }
+        catch
+        {
+            Debug.Log("no gui object found in scene.");
+        }
+
 
         CurrentState = GameState.PHASE0;
 
@@ -166,6 +163,7 @@ public class ScriptPlayer : NetworkBehaviour {
 
     IEnumerator StartGame()
     {
+        
         yield return StartCoroutine("GetSettlement");
         yield return StartCoroutine("GetRoad");
 
@@ -178,7 +176,7 @@ public class ScriptPlayer : NetworkBehaviour {
         {
             foreach (GameObject settlement in GameObject.FindGameObjectsWithTag("Settlement"))
             {
-                if(settlement.GetComponent<ScriptBoardCorner>().owner == null)
+                if (settlement.GetComponent<ScriptBoardCorner>().owner == null)
                 {
                     settlement.GetComponent<Renderer>().material.color = Color.clear;
                 }
@@ -192,7 +190,7 @@ public class ScriptPlayer : NetworkBehaviour {
             {
                 if (hit.transform.tag == "Settlement")
                 {
-                    if(hit.transform.GetComponent<ScriptBoardCorner>().owner = null)
+                    if (hit.transform.GetComponent<ScriptBoardCorner>().owner = null)
                     {
                         hit.collider.gameObject.GetComponent<Renderer>().material.color = Color.yellow;
 
@@ -203,7 +201,7 @@ public class ScriptPlayer : NetworkBehaviour {
                             settlements.Add(settlement);//Andrew Seba
                             AddAction(playerName + "," + time + settlement.transform.position);
 
-                            
+
                             break;
                         }
                     }
@@ -212,6 +210,7 @@ public class ScriptPlayer : NetworkBehaviour {
             }
             yield return null;
         }
+        
     }
 
     IEnumerator GetRoad()
