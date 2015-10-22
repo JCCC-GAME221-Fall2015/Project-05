@@ -116,10 +116,12 @@ public class ScriptEngine : MonoBehaviour
         }
 
 
-        GameObject player1 = new GameObject();//Andrew Seba
-        player1.AddComponent<PlayerData>();
-        player1.GetComponent<PlayerData>().PlayerName = "Mike";
-        players.Add(player1.GetComponent<PlayerData>());
+        //Populate List //Andrew Seba
+        foreach(GameObject player in GameObject.FindGameObjectsWithTag("Player"))
+        {
+            players.Add(player.GetComponent<PlayerData>());
+
+        }
         //setup the current state
         CurrentState = GameState.PHASE0;
 
@@ -187,7 +189,7 @@ public class ScriptEngine : MonoBehaviour
         }
     }
 
-    //@Andrew commented out because player will update their own text.
+
     void PhaseTextTransition()
     {
         if (PhaseText != null)
@@ -285,7 +287,7 @@ public class ScriptEngine : MonoBehaviour
                 //phase2menu.SetActive(false);
                 //phase3menu.SetActive(true);
                 tradeWindowButton.SetActive(false);
-                Phase3();
+                //Phase3();
                 break;
             case GameState.PHASE3:
                 //phase3menu.SetActive(false);
@@ -316,82 +318,82 @@ public class ScriptEngine : MonoBehaviour
     void Phase0()
     {
         Debug.Log("Entering Phase 0");
-        StartCoroutine("StartGame");
-    }
-
-    IEnumerator StartGame()
-    {
-        yield return StartCoroutine("GetSettlement");
-        yield return StartCoroutine("GetRoad");
-
-        //phase0button.SetActive(true);
-    }
-
-
-    IEnumerator GetSettlement()
-    {
-        while (true)
-        {
-            foreach(GameObject settlement in allEmptySettlements)
-            {
-                settlement.GetComponent<Renderer>().material.color = Color.clear;
-            }
-
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit))
-            {
-                if (hit.transform.tag == "Settlement")
-                {
-                    hit.collider.gameObject.GetComponent<Renderer>().material.color = Color.yellow;
-
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        hit.transform.GetComponent<ScriptBoardCorner>().owner = players[0];
-                        players[0].settlements.Add(hit.transform.gameObject);//Andrew Seba
-                        allEmptySettlements.Remove(hit.collider.gameObject);
-                        break;
-                    }
-                }
-            }
-            yield return null;
-        }
-    }
-
-    IEnumerator GetRoad()
-    {
-        while (true)
-        {
-            foreach(GameObject road in allEmptyRoads)
-            {
-                road.GetComponent<Renderer>().material.color = Color.clear;
-            }
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit))
-            {
-                if (hit.transform.tag == "Road")
-                {
-                    hit.collider.gameObject.GetComponent<Renderer>().material.color = Color.yellow;
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        if (hit.transform.GetComponent<ScriptBoardEdge>().CheckStartRoad())
-                        {
-                            hit.transform.GetComponent<ScriptBoardEdge>().owner = players[0];
-                            players[0].roads.Add(hit.transform.gameObject);//Andrew Seba
-                            allEmptyRoads.Remove(hit.collider.gameObject);
-
-                            break;
-                        }
-                    }
-                }
-            }
-            yield return null;
-        }
+        //StartCoroutine("StartGame");
     }
     #endregion
+
+    //IEnumerator StartGame()
+    //{
+    //    //yield return StartCoroutine("GetSettlement");
+    //    yield return StartCoroutine("GetRoad");
+
+    //    //phase0button.SetActive(true);
+    //}
+
+
+    //IEnumerator GetSettlement()
+    //{
+    //    while (true)
+    //    {
+    //        foreach(GameObject settlement in allEmptySettlements)
+    //        {
+    //            settlement.GetComponent<Renderer>().material.color = Color.clear;
+    //        }
+
+    //        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    //        RaycastHit hit;
+
+    //        if (Physics.Raycast(ray, out hit))
+    //        {
+    //            if (hit.transform.tag == "Settlement")
+    //            {
+    //                hit.collider.gameObject.GetComponent<Renderer>().material.color = Color.yellow;
+
+    //                if (Input.GetMouseButtonDown(0))
+    //                {
+    //                    hit.transform.GetComponent<ScriptBoardCorner>().owner = players[0];
+    //                    players[0].settlements.Add(hit.transform.gameObject);//Andrew Seba
+    //                    allEmptySettlements.Remove(hit.collider.gameObject);
+    //                    break;
+    //                }
+    //            }
+    //        }
+    //        yield return null;
+    //    }
+    //}
+
+    //IEnumerator GetRoad()
+    //{
+    //    while (true)
+    //    {
+    //        foreach(GameObject road in allEmptyRoads)
+    //        {
+    //            road.GetComponent<Renderer>().material.color = Color.clear;
+    //        }
+    //        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    //        RaycastHit hit;
+
+    //        if (Physics.Raycast(ray, out hit))
+    //        {
+    //            if (hit.transform.tag == "Road")
+    //            {
+    //                hit.collider.gameObject.GetComponent<Renderer>().material.color = Color.yellow;
+    //                if (Input.GetMouseButtonDown(0))
+    //                {
+    //                    if (hit.transform.GetComponent<ScriptBoardEdge>().CheckStartRoad(this.gameObject))
+    //                    {
+    //                        hit.transform.GetComponent<ScriptBoardEdge>().owner = players[0];
+    //                        players[0].roads.Add(hit.transform.gameObject);//Andrew Seba
+    //                        allEmptyRoads.Remove(hit.collider.gameObject);
+
+    //                        break;
+    //                    }
+    //                }
+    //            }
+    //        }
+    //        yield return null;
+    //    }
+    //}
 
     #region Phase 1
     void Phase1()
@@ -415,14 +417,7 @@ public class ScriptEngine : MonoBehaviour
     #endregion
 
     #region Phase 3
-    void Phase3()
-    {
-        Debug.Log("Entered Phase 3");
-        PhaseTextTransition();
-        BuildPhaseMenu.SetActive(true);
-        DisplayRoadButton();
-        DisplaySettlementButton();
-    }
+
 
     public void ActivateBuilding(string command)
     {
@@ -471,7 +466,7 @@ public class ScriptEngine : MonoBehaviour
 
                     if (Input.GetMouseButtonDown(0))
                     {
-                        if (hit.transform.GetComponent<ScriptBoardCorner>().CheckValidBuild())
+                        if (hit.transform.GetComponent<ScriptBoardCorner>().CheckValidBuild(this.gameObject))
                         {
                             Debug.Log("Valid Settlement Placement");
                             players[0].ChangeBrick(-1);
@@ -536,7 +531,7 @@ public class ScriptEngine : MonoBehaviour
 
                     if (Input.GetMouseButtonDown(0))
                     {
-                        if (selectedRoad.GetComponent<ScriptBoardEdge>().CheckValidBuild())
+                        if (selectedRoad.GetComponent<ScriptBoardEdge>().CheckValidBuild(this.gameObject))
                         {
                             Debug.Log("Valid Road Placement");
                             players[0].ChangeBrick(-1);
@@ -596,7 +591,7 @@ public class ScriptEngine : MonoBehaviour
             endTurn = true;
             foreach (PlayerData player in players)
             {
-                if (endTurn == true && player.EndTurn == false)
+                if (endTurn == true && player.endTurn == false)
                 {
                     endTurn = false;
                 }
@@ -612,7 +607,7 @@ public class ScriptEngine : MonoBehaviour
             Debug.Log(players.Count);
             for (int i = 0; i < players.Count; i++)
             {
-                players[i].EndTurn = false;
+                players[i].endTurn = false;
             }
 
             MoveNextAndTransition("goto phase 5");
@@ -625,20 +620,20 @@ public class ScriptEngine : MonoBehaviour
     public void ReturnToTrade()
     {
         StopCoroutine("CheckForEndTurn");
-        players[0].EndTurn = false;
+        players[0].endTurn = false;
         MoveNextAndTransition("goto phase 2");
     }
 
     public void ReturnToBuild()
     {
         StopCoroutine("CheckForEndTurn");
-        players[0].EndTurn = false;
+        players[0].endTurn = false;
         MoveNextAndTransition("goto phase 3");
     }
 
     public void EndTurn()
     {
-        players[0].EndTurn = true;
+        players[0].endTurn = true;
     }
     #endregion
     

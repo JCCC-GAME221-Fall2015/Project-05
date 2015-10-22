@@ -23,10 +23,7 @@ public class ScriptTradeWindow : MonoBehaviour {
     /// </summary>
     public void InitList()
     {
-        playerData = GameObject.FindGameObjectWithTag("Player").
-            GetComponent<ScriptEngine>().
-            players[0].
-            GetComponent<PlayerData>();
+        playerData = gameObject.GetComponent<PlayerData>();
 
         PopulateListWithDefaultResources();
 

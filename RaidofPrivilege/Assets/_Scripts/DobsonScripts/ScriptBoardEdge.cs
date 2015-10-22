@@ -4,36 +4,33 @@ using System.Collections.Generic;
 
 public class ScriptBoardEdge : MonoBehaviour {
 
-    public ScriptEngine engine;
+
     public PlayerData owner = null;
     public List<ScriptBoardEdge> adjacentRoads = new List<ScriptBoardEdge>(0);
     public List<ScriptBoardCorner> adjacentSettlements = new List<ScriptBoardCorner>(0);
+    public Time time;
 
-    void Start()
-    {
-        engine = GameObject.Find("Player").GetComponent<ScriptEngine>();
-    }
-
-    public bool CheckValidBuild()
+    
+    public bool CheckValidBuild(GameObject player)
     {
         foreach (ScriptBoardEdge road in adjacentRoads)
         {
-            if (road.owner == engine.players[0])
+            if (road.owner == player.GetComponent<PlayerData>())
             {
-                owner = engine.players[0];
+                owner = player.GetComponent<PlayerData>();
                 return true;
             }
         }
         return false;
     }
 
-    public bool CheckStartRoad()
+    public bool CheckStartRoad(GameObject player)
     {
         foreach (ScriptBoardCorner settlement in adjacentSettlements)
         {
-            if (settlement.owner == engine.players[0])
+            if (settlement.owner == player.GetComponent<PlayerData>())
             {
-                owner = engine.players[0];
+                owner = player.GetComponent<PlayerData>();
                 return true;
             }
         }

@@ -106,7 +106,7 @@ public class InformationSave : MonoBehaviour {
 			writer.WriteLine(userName);
 			writer.WriteLine(levelName);
 			
-			writer.WriteLine(playerData.curPhase);
+			writer.WriteLine(playerData.CurrentState);
 			
 			writer.WriteLine(playerData.wood);
 			writer.WriteLine(playerData.wool);
@@ -149,7 +149,7 @@ public class InformationSave : MonoBehaviour {
 		{
 			outputString = "PN=" + userName.ToString() +
 				"#LN=" + levelName.ToString() +
-				"#CP=" + playerData.curPhase.ToString() +
+				"#CP=" + playerData.CurrentState.ToString() +
 				"#WD=" + playerData.wood.ToString() +
 				"#WL=" + playerData.wool.ToString() +
 				"#BR=" + playerData.brick.ToString() +

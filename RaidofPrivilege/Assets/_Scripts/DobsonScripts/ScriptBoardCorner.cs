@@ -4,25 +4,21 @@ using System.Collections.Generic;
 
 public class ScriptBoardCorner : MonoBehaviour {
 
-    public ScriptEngine engine;
     public PlayerData owner = null;
     public bool roadUp;
     public List<ScriptBoardHex> adjacentHexes = new List<ScriptBoardHex>(0);
     public List<ScriptBoardEdge> adjacentRoads = new List<ScriptBoardEdge>(0);
+    public Time time;
 
-    void Start()
-    {
-        engine = GameObject.Find("Player").GetComponent<ScriptEngine>();
-    }
 
-    public bool CheckValidBuild()
+    public bool CheckValidBuild(GameObject player)
     {
         Debug.Log("Checking Valid Build");
         foreach(ScriptBoardEdge road in adjacentRoads)
         {
-            if (road.owner == engine.players[0])
+            if (road.owner == player.GetComponent<PlayerData>())
             {
-                owner = engine.players[0];
+                owner = player.GetComponent<PlayerData>();
                 return true;
             }
         }
