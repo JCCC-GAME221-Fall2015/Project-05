@@ -16,6 +16,9 @@ public class ScriptPlayer : NetworkBehaviour {
     public GameState CurrentState { get; private set; } //the current state of the game
     public GameState PreviousState { get; private set; } //the previous state of the game
 
+	public string userName = null;
+	public string levelName = null;
+
     public int wood { get; set; }
     public int wool { get; set; }
     public int brick { get; set; }
