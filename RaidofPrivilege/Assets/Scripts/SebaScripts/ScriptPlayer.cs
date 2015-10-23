@@ -47,6 +47,15 @@ public class ScriptPlayer : NetworkBehaviour {
     public int brick { get; set; }
     public int grain { get; set; }
 
+    [SyncVar]
+    int serverWood;
+    [SyncVar]
+    int serverWool;
+    [SyncVar]
+    int serverBrick;
+    [SyncVar]
+    int serverGrain;
+
     Text PhaseText;
     Text grainAmount;
     Text brickAmount;
@@ -78,7 +87,7 @@ public class ScriptPlayer : NetworkBehaviour {
 
 
     [HideInInspector]
-    public List<string> playerActions;
+    public Queue<string> playerActions;
 
     //Mike Dobson & Andrew Seba Engine collaberation from here down unless otherwise noted
     void Start()
@@ -209,7 +218,7 @@ public class ScriptPlayer : NetworkBehaviour {
     public void AddAction(string pAction)
     {
         Debug.Log(pAction);
-        playerActions.Add(pAction);
+        //playerActions.Add(pAction);
     }
 
     public void ChangeGrain(int pAmount)
@@ -722,6 +731,61 @@ public class ScriptPlayer : NetworkBehaviour {
     public void EndTurn()
     {
         endTurn = true;
+    }
+    #endregion
+
+    #region Phase 5
+    public void Phase5()
+    {
+        while(playerActions.Count > 0)
+        {
+            CmdSendActions(playerActions.Dequeue());
+        }
+    }
+
+    [Command]
+    void CmdSendActions(string action)
+    {
+        char seperator = ',';
+        string[] parse = action.Split(seperator);
+        switch(parse[0])
+        {
+            case "p1":
+                GainResources(System.Convert.ToInt32(parse[1]));
+                break;
+            case "p2":
+                break;
+            case "p3":
+                GameObject[] tempArray;
+                switch(parse[2])
+                {
+                    case "settlement":
+                        tempArray = GameObject.FindGameObjectsWithTag("Settlement");
+                        foreach(GameObject settlement in tempArray)
+                        {
+                            if(settlement.transform.position.x == System.Convert.ToInt32(parse[3]) &&
+                                settlement.transform.position.y == System.Convert.ToInt32(parse[4]) &&
+                                settlement.transform.position.z == System.Convert.ToInt32(parse[5]))
+                            {
+                                //if(settlement.GetComponent<ScriptBoardCorner>().time < System.Convert.ToDateTime)
+                            }
+                        }
+                        break;
+                    case "road":
+                        tempArray = GameObject.FindGameObjectsWithTag("Road");
+                        foreach(GameObject road in tempArray)
+                        {
+                            if (road.transform.position.x == System.Convert.ToInt32(parse[3]) &&
+                                road.transform.position.y == System.Convert.ToInt32(parse[4]) &&
+                                road.transform.position.z == System.Convert.ToInt32(parse[5]))
+                            {
+                                //if(road.GetComponent<ScriptBoardCorner>().time < System.Convert.ToDateTime)
+                            }
+                        }
+                        break;
+                }
+                break;
+        }
     }
     #endregion
 
