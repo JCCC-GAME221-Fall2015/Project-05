@@ -8,7 +8,7 @@ public class ScriptBoardEdge : MonoBehaviour {
     public ScriptPlayer owner = null;
     public List<ScriptBoardEdge> adjacentRoads = new List<ScriptBoardEdge>(0);
     public List<ScriptBoardCorner> adjacentSettlements = new List<ScriptBoardCorner>(0);
-    public Time time;
+    public float time = 0;
 
     
     public bool CheckValidBuild(GameObject player)
