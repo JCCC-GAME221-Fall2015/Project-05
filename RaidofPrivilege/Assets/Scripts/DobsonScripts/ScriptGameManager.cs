@@ -9,6 +9,10 @@ using System.Collections.Generic;
 
 public class ScriptGameManager : MonoBehaviour
 {
+	// Craig
+	[HideInInspector]
+	public InformationSave saveInfo;
+	public bool restartedGame = false;
 
     public List<ScriptPlayer> players = new List<ScriptPlayer>();
 
@@ -20,7 +24,8 @@ public class ScriptGameManager : MonoBehaviour
     void Start()
     {
         //StartCoroutine
-    }
+
+	}
 
     public void InitializeGame()
     {
@@ -98,9 +103,16 @@ public class ScriptGameManager : MonoBehaviour
             }
         }
     }
-
-    public void _PlayerNextPhase()
-    {
-        
-    }
+	
+	public void _PlayerNextPhase()
+	{
+		
+	}
+	
+	// Craig
+	public void LoadSavedGame()
+	{
+		saveInfo.LoadGame();
+		restartedGame = true;
+	}
 }

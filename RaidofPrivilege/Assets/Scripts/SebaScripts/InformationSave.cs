@@ -316,4 +316,9 @@ public class InformationSave : MonoBehaviour {
 		}
 		writer.Close();
 	} // end method SaveGame3
+
+	public void LoadGame() // Craig
+	{
+		// uses class variable levelName
+	}
 }
