@@ -94,6 +94,12 @@ public class ScriptPlayer : NetworkBehaviour {
     {
         gameManager = GameObject.Find("GameManager").GetComponent<ScriptGameManager>();
 
+		// Craig
+		if (gameManager.restartedGame)
+		{
+			// load player data from the saved game data using the player's name (public string playerName)
+		}
+
         wood = 0;
         wool = 0;
         brick = 0;

@@ -35,7 +35,6 @@ using UnityEngine.UI;
 
 public class ScriptEngine : MonoBehaviour
 {
-
     public List<ScriptPlayer> players = new List<ScriptPlayer>();
 
     //ScriptPlayer player = new ScriptPlayer("Mike");
