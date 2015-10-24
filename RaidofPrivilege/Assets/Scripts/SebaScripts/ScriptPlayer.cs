@@ -82,12 +82,12 @@ public class ScriptPlayer : NetworkBehaviour {
     public string playerName;
     public bool endTurn = false;
     Time time;
-
-    #endregion
-
-
     [HideInInspector]
     public Queue<string> playerActions;
+    public Queue<ScriptTrade> inboundTrade = new Queue<ScriptTrade>();
+    public Queue<ScriptTrade> outboundTrade = new Queue<ScriptTrade>();
+    #endregion
+
 
     //Mike Dobson & Andrew Seba Engine collaberation from here down unless otherwise noted
     void Start()
