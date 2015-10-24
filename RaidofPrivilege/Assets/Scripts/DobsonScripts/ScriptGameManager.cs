@@ -108,7 +108,7 @@ public class ScriptGameManager : MonoBehaviour
 	
 	public void _PlayerNextPhase()
 	{
-		
+        localPlayer._NextPhaseButton();
 	}
 	
 	// Craig
