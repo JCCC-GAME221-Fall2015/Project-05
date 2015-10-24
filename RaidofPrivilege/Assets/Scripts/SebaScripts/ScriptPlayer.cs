@@ -574,6 +574,21 @@ public class ScriptPlayer : NetworkBehaviour {
         Debug.Log("Entered Phase 2");
         PhaseTextTransition();
     }
+
+    public void CreateTrade(ScriptPlayer Tradie, int WantWool, int WantLumber, int WantGrain, int WantBrick,
+                            int OfferWool, int OfferLumber, int OfferGrain, int OfferBrick)
+    {
+        if(wool >= OfferWool && wood >= OfferLumber && grain >= OfferGrain && brick >= OfferBrick)
+        {
+            ChangeWool(-OfferWool);
+            ChangeWood(-OfferLumber);
+            ChangeGrain(-OfferGrain);
+            ChangeBrick(-OfferBrick);
+            outboundTrade.Enqueue(new ScriptTrade(this, Tradie, OfferWool, OfferLumber,
+                                    OfferGrain, OfferBrick, WantWool, WantLumber, 
+                                    WantGrain, WantBrick));
+        }
+    }
     #endregion
 
     #region Phase 3
@@ -774,6 +789,10 @@ public class ScriptPlayer : NetworkBehaviour {
         {
             CmdSendActions(playerActions.Dequeue());
         }
+        while(outboundTrade.Count > 0)
+        {
+            SendTrade(outboundTrade.Dequeue());
+        }
         MoveNextAndTransition("goto phase 1");
     }
 
@@ -828,6 +847,11 @@ public class ScriptPlayer : NetworkBehaviour {
                 }
                 break;
         }
+    }
+
+    void SendTrade(ScriptTrade trade)
+    {
+        gameManager.trades.Add(trade);
     }
     #endregion
 
