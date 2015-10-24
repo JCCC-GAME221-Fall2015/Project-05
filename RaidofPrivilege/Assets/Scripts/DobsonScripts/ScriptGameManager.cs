@@ -15,6 +15,7 @@ public class ScriptGameManager : MonoBehaviour
 	public bool restartedGame = false;
 
     public List<ScriptPlayer> players = new List<ScriptPlayer>();
+    public List<ScriptTrade> trades = new List<ScriptTrade>();
 
     public GameObject startGameMenu;
 
