@@ -17,7 +17,7 @@ public class ScriptGameManager : NetworkBehaviour
 	public bool restartedGame = false;
 
     public List<ScriptPlayer> players; //= new List<ScriptPlayer>();
-    [SyncVar]
+    //[SyncVar]
     public List<ScriptTrade> trades; //= new List<ScriptTrade>();
 
     public GameObject startGameMenu;
