@@ -36,6 +36,7 @@ public class ScriptPlayer : NetworkBehaviour {
     Dictionary<ScriptPhaseTransition, GameState> allTransitions; //a dictionary of phase transitions
     Dictionary<string, StateCommands> enumParse;
 
+    [SerializeField]
     public GameState CurrentState { get; private set; } //the current state of the game
     public GameState PreviousState { get; private set; } //the previous state of the game
 
@@ -80,6 +81,7 @@ public class ScriptPlayer : NetworkBehaviour {
 
     #region Network Variables
     public string playerName;
+    [SyncVar]
     public bool endTurn = false;
     Time time;
 
@@ -92,62 +94,76 @@ public class ScriptPlayer : NetworkBehaviour {
     //Mike Dobson & Andrew Seba Engine collaberation from here down unless otherwise noted
     void Start()
     {
-        gameManager = GameObject.Find("GameManager").GetComponent<ScriptGameManager>();
 
-        gameManager.localPlayer = this;
-
-		// Craig
-		if (gameManager.restartedGame)
-		{
-			// load player data from the saved game data using the player's name (public string playerName)
-		}
-
-        wood = 0;
-        wool = 0;
-        brick = 0;
-        grain = 0;
-        numSettlements = 0;
-
-        settlements = new List<GameObject>();
-        roads = new List<GameObject>();
-
-        try
+        if (isLocalPlayer)
         {
-            BuildPhaseMenu = GameObject.Find("Panel_BuildMenu");
+            gameManager = GameObject.Find("GameManager").GetComponent<ScriptGameManager>();
+
+            if (isLocalPlayer)
+            {
+                gameManager.localPlayer = this.GetComponent<ScriptPlayer>();
+            }
+
+            // Craig
+            if (gameManager.restartedGame)
+		    {
+			    // load player data from the saved game data using the player's name (public string playerName)
+		    }
+            else
+            {
+                wood = 0;
+                wool = 0;
+                brick = 0;
+                grain = 0;
+                numSettlements = 0;
+
+                settlements = new List<GameObject>();
+                roads = new List<GameObject>();
+                playerActions = new Queue<string>();
+
+            }
 
 
-            if (BuildPhaseMenu != null) {
-                BuildSettlementButton = GameObject.Find("Button_BuildRoad");
-                BuildRoadButton = GameObject.Find("Button_BuildSettlement");
+
+            try
+            {
+                BuildPhaseMenu = GameObject.Find("Panel_BuildMenu");
+
+
+                if (BuildPhaseMenu != null) {
+                    BuildSettlementButton = GameObject.Find("Button_BuildSettlement");
+                    BuildRoadButton = GameObject.Find("Button_BuildRoad");
                     
-                BuildPhaseMenu.SetActive(false);
+                    BuildPhaseMenu.SetActive(false);
+                }
+                else
+                {
+                    Debug.Log("Panel_BuildMenu can't be found. Please re-enable in scene before running.");
+                }
+
+                tradeWindowButton = GameObject.Find("Button_OpenTradeWindow");
+
+                if(tradeWindowButton != null)
+                {
+                    tradeWindowButton.SetActive(false);
+                }
+                else
+                {
+                    Debug.LogError("Button_OpenTradeWindow can't be found. Please re-enable in hierarchy before running.");
+                }
+
+
+                PhaseText = GameObject.Find("Text_CurPhase").GetComponent<Text>();
+                grainAmount = GameObject.Find("Text_GrainAmount").GetComponent<Text>();
+                brickAmount = GameObject.Find("Text_BrickAmount").GetComponent<Text>();
+                woodAmount = GameObject.Find("Text_WoodAmount").GetComponent<Text>();
+                woolAmount = GameObject.Find("Text_WoolAmount").GetComponent<Text>();
             }
-            else
+            catch
             {
-                Debug.Log("Panel_BuildMenu can't be found. Please re-enable in scene before running.");
+                Debug.Log("no gui object found in scene.");
             }
 
-            tradeWindowButton = GameObject.Find("Button_OpenTradeWindow");
-
-            if(tradeWindowButton != null)
-            {
-                tradeWindowButton.SetActive(false);
-            }
-            else
-            {
-                Debug.LogError("Button_OpenTradeWindow can't be found. Please re-enable in hierarchy before running.");
-            }
-
-
-            PhaseText = GameObject.Find("Text_CurPhase").GetComponent<Text>();
-            grainAmount = GameObject.Find("Text_GrainAmount").GetComponent<Text>();
-            brickAmount = GameObject.Find("Text_BrickAmount").GetComponent<Text>();
-            woodAmount = GameObject.Find("Text_WoodAmount").GetComponent<Text>();
-            woolAmount = GameObject.Find("Text_WoolAmount").GetComponent<Text>();
-        }
-        catch
-        {
-            Debug.Log("no gui object found in scene.");
         }
 
         CurrentState = GameState.PHASE0;
@@ -189,28 +205,28 @@ public class ScriptPlayer : NetworkBehaviour {
         //Phase0();
     }
 
-    void Update()
-    { 
-        //Cheat codes
-    #if UNITY_EDITOR
-        if (Input.GetKeyDown("1"))
-        {
-            grain++;
-        }
-        if (Input.GetKeyDown("2"))
-        {
-            brick++;
-        }
-        if (Input.GetKeyDown("3"))
-        {
-            wood++;
-        }
-        if (Input.GetKeyDown("4"))
-        {
-            wool++;
-        }
-    #endif
-    }
+    //void Update()
+    //{ 
+    //    //Cheat codes
+    //#if UNITY_EDITOR
+    //    if (Input.GetKeyDown("1"))
+    //    {
+    //        grain++;
+    //    }
+    //    if (Input.GetKeyDown("2"))
+    //    {
+    //        brick++;
+    //    }
+    //    if (Input.GetKeyDown("3"))
+    //    {
+    //        wood++;
+    //    }
+    //    if (Input.GetKeyDown("4"))
+    //    {
+    //        wool++;
+    //    }
+    //#endif
+    //}
 
     #region Player Methods
     public void GainResources(int diceRoll)
@@ -277,28 +293,24 @@ public class ScriptPlayer : NetworkBehaviour {
     /// </summary>
     public void _NextPhaseButton()
     {
-        if(isLocalPlayer)
+        switch (CurrentState)
         {
-            switch (CurrentState)
-            {
-                case GameState.PHASE0:
-                    MoveNextAndTransition("goto phase 5");
-                    break;
-                case GameState.PHASE1:
-                    MoveNextAndTransition("goto phase 2");
-                    break;
-                case GameState.PHASE2:
-                    MoveNextAndTransition("goto phase 3");
-                    break;
-                case GameState.PHASE3:
-                    MoveNextAndTransition("goto phase 4");
-                    break;
-                case GameState.PHASE4:
-                    break;
-                case GameState.PHASE5:
-                    break;
-
-            }
+            case GameState.PHASE0:
+                MoveNextAndTransition("goto phase 5");
+                break;
+            case GameState.PHASE1:
+                MoveNextAndTransition("goto phase 2");
+                break;
+            case GameState.PHASE2:
+                MoveNextAndTransition("goto phase 3");
+                break;
+            case GameState.PHASE3:
+                MoveNextAndTransition("goto phase 4");
+                break;
+            case GameState.PHASE4:
+                break;
+            case GameState.PHASE5:
+                break;
         }
     }
 
@@ -410,7 +422,7 @@ public class ScriptPlayer : NetworkBehaviour {
         switch (PreviousState)
         {
             case GameState.PHASE0:
-                //Phase5();
+                Phase5();
                 break;
             case GameState.PHASE1:
                 tradeWindowButton.SetActive(true);
@@ -426,7 +438,7 @@ public class ScriptPlayer : NetworkBehaviour {
                 break;
             case GameState.PHASE4:
                 //phase4menu.SetActive(false);
-                //Phase5();
+                Phase5();
                 break;
             case GameState.PHASE5:
                 if (CurrentState == GameState.PHASE1)
@@ -457,6 +469,7 @@ public class ScriptPlayer : NetworkBehaviour {
     {
         yield return StartCoroutine("GetSettlement");
         yield return StartCoroutine("GetRoad");
+        gameManager.nextPhaseButton.SetActive(true);
         MoveNextAndTransition("goto phase 5");
         //phase0button.SetActive(true);
     }
@@ -606,31 +619,38 @@ public class ScriptPlayer : NetworkBehaviour {
             {
                 if (hit.transform.tag == "Settlement")
                 {
+                    if (hit.transform.GetComponent<ScriptBoardCorner>().owner == null)
+                    { 
 
-                    hit.collider.gameObject.GetComponent<Renderer>().material.color = Color.yellow;
+                        hit.collider.gameObject.GetComponent<Renderer>().material.color = Color.yellow;
 
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        if (hit.transform.GetComponent<ScriptBoardCorner>().CheckValidBuild(this.gameObject))
+                        if (Input.GetMouseButtonDown(0))
                         {
-                            Debug.Log("Valid Settlement Placement");
-                            ChangeBrick(-1);
-                            ChangeWood(-1);
-                            ChangeGrain(-1);
-                            ChangeWool(-1);
+                            if (hit.transform.GetComponent<ScriptBoardCorner>().CheckValidBuild(this.gameObject))
+                            {
+                                Debug.Log("Valid Settlement Placement");
+                                ChangeBrick(-1);
+                                ChangeWood(-1);
+                                ChangeGrain(-1);
+                                ChangeWool(-1);
 
-                            DisplayRoadButton();
-                            DisplaySettlementButton();
+                                DisplayRoadButton();
+                                DisplaySettlementButton();
 
-                            //Add to player and remove from empty list //andrew seba
-                            hit.transform.GetComponent<ScriptBoardCorner>().owner = this;
-                            settlements.Add(hit.transform.gameObject);//Andrew Seba
-                            break;
-                        }
-                        else
-                        {
-                            Debug.Log("Invalid Settlement Placement");
-                            //break;
+                                //Add to player and remove from empty list //andrew seba
+                                hit.transform.GetComponent<ScriptBoardCorner>().owner = this;
+                                settlements.Add(hit.transform.gameObject);//Andrew Seba
+                                AddAction(playerName + "," + time + ",settlement,"
+                                    + hit.transform.position.x +
+                                    "," + hit.transform.position.y +
+                                    "," + hit.transform.position.z);
+                                break;
+                            }
+                            else
+                            {
+                                Debug.Log("Invalid Settlement Placement");
+                                //break;
+                            }
                         }
                     }
                 }
@@ -711,6 +731,9 @@ public class ScriptPlayer : NetworkBehaviour {
     void Phase4()
     {
         Debug.Log("Entering Phase 4");
+
+        BuildPhaseMenu.SetActive(false);
+        gameManager.endTurnToggle.SetActive(true);
         PhaseTextTransition();
         //ResourcesText();
         //StartCoroutine("CheckForEndTurn");
@@ -741,10 +764,17 @@ public class ScriptPlayer : NetworkBehaviour {
     #region Phase 5
     public void Phase5()
     {
+        Debug.Log("Entered Phase 5");
+
+        //Disable toggle
+        gameManager.endTurnToggle.SetActive(false);//andrew seba
+
+        PhaseTextTransition();
         while(playerActions.Count > 0)
         {
             CmdSendActions(playerActions.Dequeue());
         }
+        MoveNextAndTransition("goto phase 1");
     }
 
     [Command]
@@ -813,4 +843,5 @@ public class ScriptPlayer : NetworkBehaviour {
         Application.Quit();
     }
     #endregion
+
 }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 /// <summary>
 /// @author Mike Dobson
@@ -18,7 +18,14 @@ public class ScriptGameManager : MonoBehaviour
     public List<ScriptTrade> trades = new List<ScriptTrade>();
 
     public GameObject startGameMenu;
-    public ScriptPlayer localPlayer;
+    public ScriptPlayer localPlayer;//Andrew Seba
+
+    [Tooltip("Place the next phase button here.")]
+    public GameObject nextPhaseButton;//Andrew Seba
+    [Tooltip("Place the end turn toggle button here.")]
+    public GameObject endTurnToggle;
+
+    bool playersInitialized = false;
 
     int winningPlayerNumber = -1;
 
@@ -40,15 +47,16 @@ public class ScriptGameManager : MonoBehaviour
         {
             player.Phase0();
         }
+        playersInitialized = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        bool endTurn;
-        endTurn = true;
-        if(players.Count > 1)
+        if (playersInitialized)
         {
+            bool endTurn = true;
+
             foreach (ScriptPlayer player in players)
             {
                 if (endTurn == true && player.endTurn == false)
@@ -60,6 +68,7 @@ public class ScriptGameManager : MonoBehaviour
 
             if (endTurn)
             {
+                endTurnToggle.GetComponent<Toggle>().isOn = false;
                 CheckForWinner();
                 for (int i = 0; i < players.Count; i++)
                 {
@@ -69,8 +78,18 @@ public class ScriptGameManager : MonoBehaviour
 
             }
         }
+    }
 
-
+    public void ToggleLocalEndTurn()
+    {
+        if(localPlayer.endTurn == false)
+        {
+            localPlayer.endTurn = true;
+        }
+        else
+        {
+            localPlayer.endTurn = false;
+        }
     }
 
     void CheckForWinner()
@@ -101,7 +120,7 @@ public class ScriptGameManager : MonoBehaviour
             Debug.Log("No winner");
             foreach(ScriptPlayer player in players)
             {
-                player.MoveNextAndTransition("goto phase 1");
+                //player.MoveNextAndTransition("goto phase 5");
             }
         }
     }
