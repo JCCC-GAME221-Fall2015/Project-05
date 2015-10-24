@@ -8,7 +8,7 @@ public class ScriptBoardCorner : MonoBehaviour {
     public bool roadUp;
     public List<ScriptBoardHex> adjacentHexes = new List<ScriptBoardHex>(0);
     public List<ScriptBoardEdge> adjacentRoads = new List<ScriptBoardEdge>(0);
-    public Time time;
+    public float time = 0;
 
 
     public bool CheckValidBuild(GameObject player)

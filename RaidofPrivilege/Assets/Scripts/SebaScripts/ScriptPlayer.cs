@@ -767,7 +767,11 @@ public class ScriptPlayer : NetworkBehaviour {
                                 settlement.transform.position.y == System.Convert.ToInt32(parse[4]) &&
                                 settlement.transform.position.z == System.Convert.ToInt32(parse[5]))
                             {
-                                //if(settlement.GetComponent<ScriptBoardCorner>().time < System.Convert.ToDateTime)
+                                float tempTime = System.Convert.ToSingle(parse[1]);
+                                if(settlement.GetComponent<ScriptBoardCorner>().time < tempTime)
+                                {
+                                    settlement.GetComponent<ScriptBoardCorner>().owner = this;
+                                }
                             }
                         }
                         break;
@@ -779,7 +783,11 @@ public class ScriptPlayer : NetworkBehaviour {
                                 road.transform.position.y == System.Convert.ToInt32(parse[4]) &&
                                 road.transform.position.z == System.Convert.ToInt32(parse[5]))
                             {
-                                //if(road.GetComponent<ScriptBoardCorner>().time < System.Convert.ToDateTime)
+                                float tempTime = System.Convert.ToSingle(parse[1]);
+                                if(road.GetComponent<ScriptBoardEdge>().time < tempTime)
+                                {
+                                    road.GetComponent<ScriptBoardEdge>().owner = this;
+                                }
                             }
                         }
                         break;
