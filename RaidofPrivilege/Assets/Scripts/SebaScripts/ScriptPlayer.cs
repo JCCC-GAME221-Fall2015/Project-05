@@ -94,6 +94,14 @@ public class ScriptPlayer : NetworkBehaviour {
     {
         gameManager = GameObject.Find("GameManager").GetComponent<ScriptGameManager>();
 
+        gameManager.localPlayer = this;
+
+		// Craig
+		if (gameManager.restartedGame)
+		{
+			// load player data from the saved game data using the player's name (public string playerName)
+		}
+
         wood = 0;
         wool = 0;
         brick = 0;
@@ -129,8 +137,6 @@ public class ScriptPlayer : NetworkBehaviour {
             {
                 Debug.LogError("Button_OpenTradeWindow can't be found. Please re-enable in hierarchy before running.");
             }
-                
-
 
 
             PhaseText = GameObject.Find("Text_CurPhase").GetComponent<Text>();
@@ -484,12 +490,10 @@ public class ScriptPlayer : NetworkBehaviour {
                             GameObject settlement = hit.transform.gameObject;
                             settlement.GetComponent<ScriptBoardCorner>().owner = this;
                             settlements.Add(settlement);//Andrew Seba
-                            AddAction(playerName + "," + time + ",settlement," 
-                                + settlement.transform.position.x + 
-                                "," + settlement.transform.position.y + 
+                            AddAction(playerName + "," + time + ",settlement,"
+                                + settlement.transform.position.x +
+                                "," + settlement.transform.position.y +
                                 "," + settlement.transform.position.z);
-
-                            
                             break;
                         }
                     }

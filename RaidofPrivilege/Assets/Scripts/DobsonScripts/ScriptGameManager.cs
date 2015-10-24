@@ -9,11 +9,16 @@ using System.Collections.Generic;
 
 public class ScriptGameManager : MonoBehaviour
 {
+	// Craig
+	[HideInInspector]
+	public InformationSave saveInfo;
+	public bool restartedGame = false;
 
     public List<ScriptPlayer> players = new List<ScriptPlayer>();
     public List<ScriptTrade> trades = new List<ScriptTrade>();
 
     public GameObject startGameMenu;
+    public ScriptPlayer localPlayer;
 
     int winningPlayerNumber = -1;
 
@@ -21,7 +26,8 @@ public class ScriptGameManager : MonoBehaviour
     void Start()
     {
         //StartCoroutine
-    }
+
+	}
 
     public void InitializeGame()
     {
@@ -99,9 +105,16 @@ public class ScriptGameManager : MonoBehaviour
             }
         }
     }
-
-    public void _PlayerNextPhase()
-    {
-        
-    }
+	
+	public void _PlayerNextPhase()
+	{
+        localPlayer._NextPhaseButton();
+	}
+	
+	// Craig
+	public void LoadSavedGame()
+	{
+		saveInfo.LoadGame();
+		restartedGame = true;
+	}
 }
