@@ -18,6 +18,7 @@ public class ScriptGameManager : MonoBehaviour
     public List<ScriptTrade> trades = new List<ScriptTrade>();
 
     public GameObject startGameMenu;
+    public ScriptPlayer localPlayer;
 
     int winningPlayerNumber = -1;
 

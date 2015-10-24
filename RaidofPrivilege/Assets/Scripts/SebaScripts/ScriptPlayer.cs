@@ -94,6 +94,8 @@ public class ScriptPlayer : NetworkBehaviour {
     {
         gameManager = GameObject.Find("GameManager").GetComponent<ScriptGameManager>();
 
+        gameManager.localPlayer = this;
+
 		// Craig
 		if (gameManager.restartedGame)
 		{
