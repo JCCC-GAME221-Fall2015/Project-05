@@ -409,7 +409,55 @@ public class ScriptEngine : MonoBehaviour
         //Activate Trade Menu
         tradeMenu.SetActive(true);
         //Select Trade Partner (Insert networking reference here)
-
+        //enable bank button
+        switch (players.Count)
+        {
+            case 2:
+                //enable otherPlayer1 button
+                break;
+            case 3:
+                //enable otherPlayer2 button
+                goto case 2;
+            case 4:
+                //enable otherPlayer3 button
+                goto case 3;
+            case 5:
+                //enable otherPlayer4 button
+                goto case 4;
+            case 6:
+                //enable otherPlayer5 button
+                goto case 5;
+            case 7:
+                //enable otherPlayer6 button
+                goto case 6;
+            case 8:
+                //enable otherPlayer7 button
+                goto case 7;
+            case 9:
+                //enable otherPlayer8 button
+                goto case 8;
+            case 10:
+                //enable otherPlayer9 button
+                goto case 9;
+            case 11:
+                //enable otherPlayer10 button
+                goto case 10;
+            case 12:
+                //enable otherPlayer11 button
+                goto case 11;
+            case 13:
+                //enable otherPlayer12 button
+                goto case 12;
+            case 14:
+                //enable otherPlayer13 button
+                goto case 13;
+            case 15:
+                //enable otherPlayer14 button
+                goto case 14;
+            case 16:
+                //enable otherPlayer15 button
+                goto case 15;
+        }
         // if (tradePartner == "Bank")
             //bankTradeButton.SetActive(true);
         // else playerTradeButton.SetActive(true);
