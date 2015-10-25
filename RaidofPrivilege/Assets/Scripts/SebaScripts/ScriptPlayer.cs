@@ -782,7 +782,10 @@ public class ScriptPlayer : NetworkBehaviour {
         Debug.Log("Entered Phase 5");
 
         //Disable toggle
-        gameManager.endTurnToggle.SetActive(false);//andrew seba
+        if(gameManager.endTurnToggle != null)
+        {
+            gameManager.endTurnToggle.SetActive(false);//andrew seba
+        }
 
         PhaseTextTransition();
         while(playerActions.Count > 0)
@@ -867,5 +870,13 @@ public class ScriptPlayer : NetworkBehaviour {
         Application.Quit();
     }
     #endregion
+
+
+    [Command]
+    public void CmdSendEndTurn(bool pEndTurn)
+    {
+        endTurn = pEndTurn;
+    }
+
 
 }

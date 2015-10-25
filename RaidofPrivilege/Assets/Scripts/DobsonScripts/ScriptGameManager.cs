@@ -106,10 +106,12 @@ public class ScriptGameManager : NetworkBehaviour
         if(localPlayer.endTurn == false)
         {
             localPlayer.endTurn = true;
+            localPlayer.CmdSendEndTurn(true);
         }
         else
         {
             localPlayer.endTurn = false;
+            localPlayer.CmdSendEndTurn(false);
         }
     }
 
