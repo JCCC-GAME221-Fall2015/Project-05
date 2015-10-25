@@ -49,7 +49,7 @@ public class ScriptBoardEdge : MonoBehaviour {
             }
         }
         colliderRadius = transform.lossyScale.y * 1.5f;
-        Vector3 colliderLocation = new Vector3(transform.position.x, transform.position.y, transform.position.z - .5f);
+        //Vector3 colliderLocation = new Vector3(transform.position.x, transform.position.y, transform.position.z - .5f);
         hitColliders = Physics.OverlapSphere(transform.position, colliderRadius);
         for (int i = 0; i < hitColliders.Length; i++)
         {

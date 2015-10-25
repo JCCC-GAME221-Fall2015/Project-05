@@ -1,21 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Collections;
+using UnityEngine.Networking;
 
 /// <summary>
 /// @author Mike Dobson
 /// This is going to control the state of the game that is outside of the players control
 /// </summary>
 
-public class ScriptGameManager : MonoBehaviour
+public class ScriptGameManager : NetworkBehaviour
 {
 	// Craig
 	[HideInInspector]
 	public InformationSave saveInfo;
 	public bool restartedGame = false;
 
-    public List<ScriptPlayer> players = new List<ScriptPlayer>();
-    public List<ScriptTrade> trades = new List<ScriptTrade>();
+    public List<ScriptPlayer> players; //= new List<ScriptPlayer>();
+    //[SyncVar]
+    public List<ScriptTrade> trades; //= new List<ScriptTrade>();
 
     public GameObject startGameMenu;
     public ScriptPlayer localPlayer;//Andrew Seba
@@ -28,6 +31,8 @@ public class ScriptGameManager : MonoBehaviour
     bool playersInitialized = false;
 
     int winningPlayerNumber = -1;
+
+    int infiniteLoopBreak = 0;
 
     // Use this for initialization
     void Start()
@@ -53,10 +58,14 @@ public class ScriptGameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        StartCoroutine(CheckForEndGame());
+    }
+
+    IEnumerator CheckForEndGame()
+    {
         if (playersInitialized)
         {
             bool endTurn = true;
-
             foreach (ScriptPlayer player in players)
             {
                 if (endTurn == true && player.endTurn == false)
@@ -70,6 +79,7 @@ public class ScriptGameManager : MonoBehaviour
             {
                 endTurnToggle.GetComponent<Toggle>().isOn = false;
                 CheckForWinner();
+                yield return StartCoroutine(TransmitTrades());
                 for (int i = 0; i < players.Count; i++)
                 {
                     players[i].endTurn = false;
@@ -78,6 +88,17 @@ public class ScriptGameManager : MonoBehaviour
 
             }
         }
+
+        //if(infiniteLoopBreak > 1000)
+        //{
+        //    Debug.LogWarning("Loop Reached Max");
+        //}
+        //else 
+        //{
+        //    Debug.Log("Working Fine");
+        //}
+        //infiniteLoopBreak++;
+        yield return new WaitForEndOfFrame();
     }
 
     public void ToggleLocalEndTurn()
@@ -125,6 +146,16 @@ public class ScriptGameManager : MonoBehaviour
         }
     }
 	
+    IEnumerator TransmitTrades()
+    {
+        foreach(ScriptTrade trade in trades)
+        {
+            ScriptPlayer tempPlayer = trade.tradie;
+            tempPlayer.inboundTrade.Enqueue(trade);
+        }
+        yield return null;
+    }
+
 	public void _PlayerNextPhase()
 	{
         localPlayer._NextPhaseButton();
