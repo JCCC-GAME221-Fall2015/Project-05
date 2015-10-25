@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 
 /// <summary>
 /// Author: Matt Gipson
@@ -14,22 +15,44 @@ public class PopulateMenu : MonoBehaviour {
 
     public Text mapName;
     public Button next, back;
-    public string[] maps; //temp array to hold maps
+    public List<string> maps; //temp array to hold maps
     public int active = 0;
 
     #endregion
 
-    void Start() {}
+    void Start() {
+        //pull in default map
+        using (StreamReader sr = new StreamReader(Application.dataPath + "/Embedded/Default.txt")) {
+            maps.Add( sr.ReadLine());
+        }
+
+        string[] worlds = Directory.GetFiles(Application.dataPath + "/Worlds/", "*.txt");
+
+        for(int i = 0; i < worlds.Length; i++) {
+            using ( StreamReader sr = new StreamReader( worlds[i]) ) {
+                maps.Add( sr.ReadLine() );
+            }
+        }
+
+
+        //last update gui
+        mapName.text = maps[0];
+    }
 
     void Update() {
-        if (active == 0) {
-            back.gameObject.SetActive(false);
-        } else if (active >= maps.Length - 1) {
-            back.gameObject.SetActive(true);
-            next.gameObject.SetActive(false);
-        } else if (active > 0 && active < maps.Length) {
-            back.gameObject.SetActive(true);
-            next.gameObject.SetActive(true);
+        if (maps.Count > 1) {
+            if (active == 0) {
+                back.gameObject.SetActive(false);
+            } else if (active >= maps.Count - 1) {
+                back.gameObject.SetActive(true);
+                next.gameObject.SetActive(false);
+            } else if (active > 0 && active < maps.Count) {
+                back.gameObject.SetActive(true);
+                next.gameObject.SetActive(true);
+            }
+        } else {
+            back.gameObject.SetActive( false );
+            next.gameObject.SetActive( false );
         }
     }
 
@@ -41,8 +64,12 @@ public class PopulateMenu : MonoBehaviour {
         UpdateSelectedMap(-1);
     }
 
+    public void PlayButton() {
+        
+    }
+
     void UpdateSelectedMap(int i) {
-        if (active + i > -1 && active + i < maps.Length) {
+        if (active + i > -1 && active + i < maps.Count) {
             active += i;
             mapName.text = maps[active];
         }
