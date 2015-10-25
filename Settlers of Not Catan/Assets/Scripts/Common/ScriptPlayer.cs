@@ -8,8 +8,8 @@ using System.Collections.Generic;
 
 public class ScriptPlayer {
 
-    public List<GameObject> settlements;
-    public List<GameObject> roads;
+    public List<GameObject> settlements = new List<GameObject>();
+    public List<GameObject> roads = new List<GameObject>();
 
     public bool EndTurn = false;
     

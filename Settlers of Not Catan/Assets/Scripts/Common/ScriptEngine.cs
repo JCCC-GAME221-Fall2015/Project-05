@@ -348,6 +348,7 @@ public class ScriptEngine : MonoBehaviour
                     if (hit.transform.tag == "Settlement")
                     {
                         hit.transform.GetComponent<ScriptBoardCorner>().owner = players[0];
+                        players[0].settlements.Add(hit.transform.gameObject);
                         break;
                     }
                 }
