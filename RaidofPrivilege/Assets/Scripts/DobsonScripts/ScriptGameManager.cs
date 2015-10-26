@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections; // Craig
 using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Collections;
@@ -11,10 +12,7 @@ using UnityEngine.Networking;
 
 public class ScriptGameManager : NetworkBehaviour
 {
-	// Craig
-	[HideInInspector]
-	public InformationSave saveInfo;
-	public bool restartedGame = false;
+	public bool restartedGame = false; // Craig
 
     public List<ScriptPlayer> players; //= new List<ScriptPlayer>();
     //[SyncVar]
@@ -37,6 +35,7 @@ public class ScriptGameManager : NetworkBehaviour
     // Use this for initialization
     void Start()
     {
+		restartedGame = false; // Craig
         //StartCoroutine
 
 	}
@@ -172,10 +171,13 @@ public class ScriptGameManager : NetworkBehaviour
         localPlayer._NextPhaseButton();
 	}
 	
-	// Craig
-	public void LoadSavedGame()
+	// @author: Craig Broskow
+	public void LoadSavedGame(string pLevelName)
 	{
-		saveInfo.LoadGame();
-		restartedGame = true;
-	}
+		InformationSave saveInfo = Camera.main.GetComponent<InformationSave>();
+		if (saveInfo.LoadGame(pLevelName))
+			restartedGame = true;
+		else
+			restartedGame = false;
+	} // end method LoadSavedGame
 }
