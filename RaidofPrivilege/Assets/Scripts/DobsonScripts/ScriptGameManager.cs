@@ -78,14 +78,18 @@ public class ScriptGameManager : NetworkBehaviour
             if (endTurn)
             {
                 endTurnToggle.GetComponent<Toggle>().isOn = false;
+                ToggleLocalEndTurn();
                 CheckForWinner();
                 yield return StartCoroutine(TransmitTrades());
-                for (int i = 0; i < players.Count; i++)
-                {
-                    players[i].endTurn = false;
-                    players[i].MoveNextAndTransition("goto phase 5");
-                }
 
+                
+                localPlayer.MoveNextAndTransition("goto phase 5");
+
+                //for (int i = 0; i < players.Count; i++)
+                //{
+                //    players[i].endTurn = false;
+                //    players[i].MoveNextAndTransition("goto phase 5");
+                //}
             }
         }
 
@@ -101,6 +105,11 @@ public class ScriptGameManager : NetworkBehaviour
         yield return new WaitForEndOfFrame();
     }
 
+    /// <summary>
+    /// @Author: Andrew Seba
+    /// @Description: Toggles the endturn on local player and sends it across
+    /// the network.
+    /// </summary>
     public void ToggleLocalEndTurn()
     {
         if(localPlayer.endTurn == false)
