@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum HexType
-{
-    WOOD,
-    GRAIN,
-    BRICK,
-    WOOL,
-    NONE
-}
+//public enum HexType
+//{
+//    WOOD,
+//    GRAIN,
+//    BRICK,
+//    WOOL,
+//    NONE
+//}
 
 
 public class ScriptHex

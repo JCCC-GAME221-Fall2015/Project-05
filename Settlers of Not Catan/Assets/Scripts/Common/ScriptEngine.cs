@@ -64,6 +64,7 @@ public class ScriptEngine : MonoBehaviour
 
     #region Phase 2 variables
     public GameObject phase2menu; // the phase 2 menu
+    public GameObject tradeMenu; // the trade menu
     #endregion
 
     #region Phase 3 variables
@@ -347,6 +348,7 @@ public class ScriptEngine : MonoBehaviour
                     if (hit.transform.tag == "Settlement")
                     {
                         hit.transform.GetComponent<ScriptBoardCorner>().owner = players[0];
+                        players[0].settlements.Add(hit.transform.gameObject);
                         break;
                     }
                 }
@@ -400,6 +402,86 @@ public class ScriptEngine : MonoBehaviour
         PhaseTextTransition();
         ResourcesText();
         //MoveNextAndTransition("goto phase 3");
+    }
+
+    // @Author Marshall Mason
+    public void _OpenTradeInterface()
+    {
+        //Activate Trade Menu
+        tradeMenu.SetActive(true);
+        //Select Trade Partner (Insert networking reference here)
+        //enable bank button
+        switch (players.Count)
+        {
+            case 2:
+                //enable otherPlayer1 button
+                break;
+            case 3:
+                //enable otherPlayer2 button
+                goto case 2;
+            case 4:
+                //enable otherPlayer3 button
+                goto case 3;
+            case 5:
+                //enable otherPlayer4 button
+                goto case 4;
+            case 6:
+                //enable otherPlayer5 button
+                goto case 5;
+            case 7:
+                //enable otherPlayer6 button
+                goto case 6;
+            case 8:
+                //enable otherPlayer7 button
+                goto case 7;
+            case 9:
+                //enable otherPlayer8 button
+                goto case 8;
+            case 10:
+                //enable otherPlayer9 button
+                goto case 9;
+            case 11:
+                //enable otherPlayer10 button
+                goto case 10;
+            case 12:
+                //enable otherPlayer11 button
+                goto case 11;
+            case 13:
+                //enable otherPlayer12 button
+                goto case 12;
+            case 14:
+                //enable otherPlayer13 button
+                goto case 13;
+            case 15:
+                //enable otherPlayer14 button
+                goto case 14;
+            case 16:
+                //enable otherPlayer15 button
+                goto case 15;
+        }
+        // if (tradePartner == "Bank")
+        //bankTradeButton.SetActive(true);
+        // else playerTradeButton.SetActive(true);
+    }
+
+    // @Author Marshall Mason
+    public void _PlayerTradeConfirm()
+    {
+        //if (tradePartner != null)
+        //if outgoing amounts are all less than current stocks
+        //Send trade to other player
+        //Receive confirmation from other player regarding accept/reject of trade
+        //if trade is accepted, adjust stocks
+    }
+
+    // @Author Marshall Mason
+    public void _BankTradeConfirm()
+    {
+        //cap outgoing amounts to current stocks
+        //disallow incoming resources that match outgoing resources
+        //cap incoming amounts to 1/2 outgoing amounts
+        //if all that is met, confirm trade dialog
+        //else error dialog telling player why trade not allowed
     }
     #endregion
 
