@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class ScriptBoardEdge : MonoBehaviour {
+public class ScriptBoardEdge : MonoBehaviour
+{
 
     public ScriptEngine engine;
     public ScriptPlayer owner = null;

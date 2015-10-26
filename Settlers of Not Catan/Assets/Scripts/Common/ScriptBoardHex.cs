@@ -51,20 +51,20 @@ public class ScriptBoardHex : MonoBehaviour
         if (!spriteSet)
         {
             SpriteRenderer sr = this.gameObject.GetComponent<SpriteRenderer>();
-            switch(resource)
+            switch (resource)
             {
                 case HexType.WOOD:
-                sr.sprite = woodHexSprite;
-                break;
+                    sr.sprite = woodHexSprite;
+                    break;
                 case HexType.WOOL:
-                sr.sprite = woolHexSprite;
-                break;
+                    sr.sprite = woolHexSprite;
+                    break;
                 case HexType.GRAIN:
-                sr.sprite = grainHexSprite;
-                break;
+                    sr.sprite = grainHexSprite;
+                    break;
                 case HexType.BRICK:
-                sr.sprite = brickHexSprite;
-                break;
+                    sr.sprite = brickHexSprite;
+                    break;
             }
             spriteSet = true;
         }
@@ -89,7 +89,7 @@ public class ScriptBoardHex : MonoBehaviour
                 if (other.tag == "Road")
                 {
                     edgeFound = true;
-                    
+
                 }
             }
             if (!edgeFound)

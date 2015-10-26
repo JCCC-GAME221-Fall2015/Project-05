@@ -1002,7 +1002,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 350753943}
-        m_MethodName: _OpenTradeInterface
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1078,7 +1078,6 @@ MonoBehaviour:
   phase0button: {fileID: 221993527}
   phase1menu: {fileID: 726039355}
   phase2menu: {fileID: 667586775}
-  tradeMenu: {fileID: 0}
   phase3menu: {fileID: 1190638718}
   BuildSettlementMenu: {fileID: 1412957725}
   BuildRoadMenu: {fileID: 336658184}
@@ -2117,7 +2116,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &726039356
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2377,11 +2376,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 403552, guid: a8920fd7f096bf04a81b3fcbf8e235ed, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -3.02999997
+      value: -3.66727304
       objectReference: {fileID: 0}
     - target: {fileID: 403552, guid: a8920fd7f096bf04a81b3fcbf8e235ed, type: 2}
       propertyPath: m_LocalPosition.y
-      value: .25999999
+      value: -.0229525566
       objectReference: {fileID: 0}
     - target: {fileID: 403552, guid: a8920fd7f096bf04a81b3fcbf8e235ed, type: 2}
       propertyPath: m_LocalPosition.z
@@ -4614,7 +4613,7 @@ Camera:
   near clip plane: .300000012
   far clip plane: 1000
   field of view: 60
-  orthographic: 1
+  orthographic: 0
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -4623,6 +4622,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
+  m_TargetEye: 3
   m_HDR: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10

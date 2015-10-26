@@ -6,16 +6,17 @@ using System.Collections.Generic;
 /// @author Mike Dobson
 /// </summary>
 
-public class ScriptPlayer {
+public class ScriptPlayer
+{
 
     public List<GameObject> settlements = new List<GameObject>();
     public List<GameObject> roads = new List<GameObject>();
 
     public bool EndTurn = false;
-    
+
     public void GainResources(int diceRoll)
     {
-        foreach(GameObject settlement in settlements)
+        foreach (GameObject settlement in settlements)
         {
             settlement.GetComponent<ScriptBoardCorner>().GainResources(diceRoll);
         }

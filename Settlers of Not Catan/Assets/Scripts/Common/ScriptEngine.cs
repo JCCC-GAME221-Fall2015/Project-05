@@ -460,7 +460,7 @@ public class ScriptEngine : MonoBehaviour
                 goto case 15;
         }
         // if (tradePartner == "Bank")
-            //bankTradeButton.SetActive(true);
+        //bankTradeButton.SetActive(true);
         // else playerTradeButton.SetActive(true);
     }
 
@@ -468,10 +468,10 @@ public class ScriptEngine : MonoBehaviour
     public void _PlayerTradeConfirm()
     {
         //if (tradePartner != null)
-            //if outgoing amounts are all less than current stocks
-                //Send trade to other player
-                //Receive confirmation from other player regarding accept/reject of trade
-                //if trade is accepted, adjust stocks
+        //if outgoing amounts are all less than current stocks
+        //Send trade to other player
+        //Receive confirmation from other player regarding accept/reject of trade
+        //if trade is accepted, adjust stocks
     }
 
     // @Author Marshall Mason
