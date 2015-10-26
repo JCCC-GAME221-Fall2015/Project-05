@@ -844,4 +844,10 @@ public class ScriptPlayer : NetworkBehaviour {
     }
     #endregion
 
+	// @author: Craig Broskow
+	public void SetCurrentState(GameState newGameState) // Craig
+	{
+		PreviousState = CurrentState;
+		CurrentState = newGameState;
+	} // end method SetCurrentState
 }

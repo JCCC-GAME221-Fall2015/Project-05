@@ -18,5 +18,5 @@ public class ScriptNetworkButtons : MonoBehaviour {
 	public void _StartHost()
     {
         manager.StartHost();
-    }
+	}
 }

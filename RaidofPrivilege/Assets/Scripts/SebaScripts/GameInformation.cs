@@ -29,8 +29,8 @@ public class GameInformation : MonoBehaviour {
 	/// </summary>
 	public void _SaveGame()
 	{
-		saveInfo.SaveGame2(); // Craig
-//		saveInfo.SaveGame3(); // Craig
+		saveInfo.SaveGame3(); // Craig
+//		saveInfo.SaveGame2(); // Craig
 //		saveInfo.SaveGame();
 
 	}
