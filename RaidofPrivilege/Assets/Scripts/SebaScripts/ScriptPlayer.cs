@@ -84,12 +84,12 @@ public class ScriptPlayer : NetworkBehaviour {
     [SyncVar]
     public bool endTurn = false;
     Time time;
-
-    #endregion
-
-
     [HideInInspector]
     public Queue<string> playerActions;
+    public Queue<ScriptTrade> inboundTrade = new Queue<ScriptTrade>();
+    public Queue<ScriptTrade> outboundTrade = new Queue<ScriptTrade>();
+    #endregion
+
 
     //Mike Dobson & Andrew Seba Engine collaberation from here down unless otherwise noted
     void Start()
@@ -574,6 +574,21 @@ public class ScriptPlayer : NetworkBehaviour {
         Debug.Log("Entered Phase 2");
         PhaseTextTransition();
     }
+
+    public void CreateTrade(ScriptPlayer Tradie, int WantWool, int WantLumber, int WantGrain, int WantBrick,
+                            int OfferWool, int OfferLumber, int OfferGrain, int OfferBrick)
+    {
+        if(wool >= OfferWool && wood >= OfferLumber && grain >= OfferGrain && brick >= OfferBrick)
+        {
+            ChangeWool(-OfferWool);
+            ChangeWood(-OfferLumber);
+            ChangeGrain(-OfferGrain);
+            ChangeBrick(-OfferBrick);
+            outboundTrade.Enqueue(new ScriptTrade(this, Tradie, OfferWool, OfferLumber,
+                                    OfferGrain, OfferBrick, WantWool, WantLumber, 
+                                    WantGrain, WantBrick));
+        }
+    }
     #endregion
 
     #region Phase 3
@@ -767,12 +782,19 @@ public class ScriptPlayer : NetworkBehaviour {
         Debug.Log("Entered Phase 5");
 
         //Disable toggle
-        gameManager.endTurnToggle.SetActive(false);//andrew seba
+        if(gameManager.endTurnToggle != null)
+        {
+            gameManager.endTurnToggle.SetActive(false);//andrew seba
+        }
 
         PhaseTextTransition();
         while(playerActions.Count > 0)
         {
             CmdSendActions(playerActions.Dequeue());
+        }
+        while(outboundTrade.Count > 0)
+        {
+            SendTrade(outboundTrade.Dequeue());
         }
         MoveNextAndTransition("goto phase 1");
     }
@@ -829,6 +851,11 @@ public class ScriptPlayer : NetworkBehaviour {
                 break;
         }
     }
+
+    void SendTrade(ScriptTrade trade)
+    {
+        gameManager.trades.Add(trade);
+    }
     #endregion
 
     #region Phase 6
@@ -850,4 +877,9 @@ public class ScriptPlayer : NetworkBehaviour {
 		PreviousState = CurrentState;
 		CurrentState = newGameState;
 	} // end method SetCurrentState
+    [Command]
+    public void CmdSendEndTurn(bool pEndTurn)
+    {
+        endTurn = pEndTurn;
+    }
 }
