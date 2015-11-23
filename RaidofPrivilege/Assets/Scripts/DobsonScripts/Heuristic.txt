@@ -1,0 +1,11 @@
+Build settlement
+p3,time,settlement,x,y,z
+
+Build road
+p3,time,road,x,y,z
+
+roll dice
+p1,#
+
+trade
+p2,tradiename,traderwool,traderlumber,tradergrain,traderbrick,tradiewool,tradielumber,tradiegrain,tradiebrick
